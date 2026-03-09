@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
 <title>World on a Plate</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
@@ -19,29 +19,24 @@
     --text: #1a1008;
     --muted: #8a7060;
     --border: #ecdcc8;
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --safe-top: env(safe-area-inset-top, 0px);
   }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); display: flex; min-height: 100vh; overflow-x: hidden; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
 
+  /* ── SIDEBAR (desktop only) ── */
   #sidebar {
     width: 240px; min-height: 100vh; background: var(--sidebar);
-    display: flex; flex-direction: column; position: fixed; left: 0; top: 0; z-index: 100;
+    display: flex; flex-direction: column; position: fixed; left: 0; top: 0; z-index: 200;
     transition: transform .3s ease;
   }
   #sidebar .logo-area {
-    padding: 20px 20px 16px;
-    border-bottom: 1px solid #2e1e0e;
-    cursor: pointer;
-    transition: background .2s;
+    padding: 20px 20px 16px; border-bottom: 1px solid #2e1e0e;
+    cursor: pointer; transition: background .2s;
     display: flex; align-items: center; justify-content: center;
   }
   #sidebar .logo-area:hover { background: #2e1e0e; }
-  #sidebar .logo-area .logo-svg-wrap {
-    display: flex; align-items: center; justify-content: center;
-  }
-  #sidebar .logo-area .logo-svg-wrap svg {
-    width: 48px; height: 48px; flex-shrink: 0;
-  }
   #sidebar nav { flex: 1; padding: 18px 0; overflow-y: auto; }
   #sidebar nav .section-label {
     font-size: .62rem; letter-spacing: .15em; text-transform: uppercase;
@@ -50,84 +45,50 @@
   #sidebar nav a {
     display: flex; align-items: center; gap: 10px;
     padding: 10px 22px; color: #c9b49a; text-decoration: none;
-    font-size: .88rem; font-weight: 500; border-radius: 0;
-    transition: background .2s, color .2s;
-    cursor: pointer;
+    font-size: .88rem; font-weight: 500;
+    transition: background .2s, color .2s; cursor: pointer;
   }
-  #sidebar nav a:hover, #sidebar nav a.active {
-    background: #2e1e0e; color: #fff;
-  }
+  #sidebar nav a:hover, #sidebar nav a.active { background: #2e1e0e; color: #fff; }
   #sidebar nav a .icon { font-size: 1.1rem; width: 22px; text-align: center; }
-  #sidebar .sidebar-footer {
-    padding: 18px 22px; border-top: 1px solid #2e1e0e;
-    font-size: .75rem; color: #5a4030;
-  }
+  #sidebar .sidebar-footer { padding: 18px 22px; border-top: 1px solid #2e1e0e; font-size: .75rem; color: #5a4030; }
 
+  /* ── MAIN CONTENT ── */
   #main { margin-left: 240px; flex: 1; min-height: 100vh; }
 
+  /* ── HEADER ── */
   #header {
     background: linear-gradient(135deg, #e8490f 0%, #f5a623 60%, #ffe08a 100%);
-    padding: 36px 40px 28px;
-    position: relative; overflow: hidden;
-    cursor: pointer;
-    user-select: none;
+    padding: 36px 40px 28px; position: relative; overflow: hidden; cursor: pointer;
   }
   #header::before {
     content: '🍜🥘🍱🌮🥗🍣🥙🍛🥞🍕';
     position: absolute; top: 6px; right: -10px; font-size: 1.8rem;
-    letter-spacing: 8px; opacity: .18; white-space: nowrap;
-    pointer-events: none;
+    letter-spacing: 8px; opacity: .18; white-space: nowrap; pointer-events: none;
   }
-  #header:hover h1 { text-shadow: 0 4px 20px rgba(0,0,0,.3); }
   #header h1 {
     font-family: 'Playfair Display', serif; font-size: 2.8rem; font-weight: 900;
     color: #fff; text-shadow: 0 2px 12px rgba(0,0,0,.18); letter-spacing: -.01em;
-    pointer-events: none;
-    display: flex; align-items: center; gap: 14px;
+    pointer-events: none; display: flex; align-items: center; gap: 14px;
   }
   #header h1 .header-logo-svg { width: 56px; height: 56px; flex-shrink: 0; }
 
-  /* ── Scrolling ticker tagline ── */
-  .tagline-ticker-wrap {
-    overflow: hidden;
-    width: 100%;
-    margin-top: 6px;
-    pointer-events: none;
-  }
-  .tagline-ticker {
-    display: inline-flex;
-    white-space: nowrap;
-    animation: ticker-scroll 20s linear infinite;
-  }
-  .tagline-ticker span {
-    color: rgba(255,255,255,.85);
-    font-size: .95rem;
-    padding-right: 100px;
-  }
-  @keyframes ticker-scroll {
-    0%   { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
-  }
+  .tagline-ticker-wrap { overflow: hidden; width: 100%; margin-top: 6px; pointer-events: none; }
+  .tagline-ticker { display: inline-flex; white-space: nowrap; animation: ticker-scroll 20s linear infinite; }
+  .tagline-ticker span { color: rgba(255,255,255,.85); font-size: .95rem; padding-right: 100px; }
+  @keyframes ticker-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
-  #search-wrap {
-    margin-top: 20px; display: flex; align-items: center; gap: 10px;
-    max-width: 560px;
-  }
+  #search-wrap { margin-top: 20px; display: flex; align-items: center; gap: 10px; max-width: 560px; }
   #search-wrap input {
     flex: 1; padding: 13px 20px; border-radius: 50px; border: none;
     font-size: .95rem; font-family: 'DM Sans', sans-serif;
     background: rgba(255,255,255,.95); color: var(--text);
-    box-shadow: 0 4px 20px rgba(0,0,0,.12);
-    outline: none; transition: box-shadow .2s;
+    box-shadow: 0 4px 20px rgba(0,0,0,.12); outline: none;
   }
-  #search-wrap input:focus { box-shadow: 0 4px 24px rgba(0,0,0,.22); }
   #search-wrap button {
     padding: 13px 26px; border-radius: 50px; border: none;
     background: var(--sidebar); color: #fff; font-family: 'DM Sans', sans-serif;
     font-weight: 600; font-size: .9rem; cursor: pointer;
-    box-shadow: 0 4px 14px rgba(0,0,0,.2); transition: background .2s, transform .1s;
   }
-  #search-wrap button:hover { background: #2e1e0e; transform: scale(1.04); }
 
   #content { padding: 32px 40px 60px; }
 
@@ -140,18 +101,15 @@
   }
   .sec-sub { color: var(--muted); font-size: .9rem; margin-bottom: 28px; }
 
-  .filter-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 30px; }
+  .filter-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 30px; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 4px; }
   .pill {
     padding: 7px 18px; border-radius: 50px; border: 2px solid var(--border);
     background: #fff; font-size: .83rem; font-weight: 600; cursor: pointer;
-    transition: all .2s; color: var(--muted);
+    transition: all .2s; color: var(--muted); white-space: nowrap; flex-shrink: 0;
   }
   .pill:hover, .pill.active { border-color: var(--accent1); background: var(--accent1); color: #fff; }
 
-  .cuisine-grid {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 28px;
-  }
+  .cuisine-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 28px; }
   .cuisine-card {
     background: var(--card-bg); border-radius: 20px;
     box-shadow: 0 4px 24px rgba(0,0,0,.07); overflow: hidden;
@@ -163,9 +121,7 @@
     background: linear-gradient(135deg, var(--c1, #e8490f), var(--c2, #f5a623));
   }
   .cuisine-header .flag { font-size: 2.4rem; margin-bottom: 8px; display: block; }
-  .cuisine-header h3 {
-    font-family: 'Playfair Display', serif; font-size: 1.4rem; color: #fff; font-weight: 700;
-  }
+  .cuisine-header h3 { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: #fff; font-weight: 700; }
   .cuisine-header p { color: rgba(255,255,255,.8); font-size: .8rem; margin-top: 3px; }
   .cuisine-dishes { padding: 18px 24px 20px; }
   .cuisine-dishes h4 { font-size: .75rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
@@ -173,116 +129,67 @@
   .dish-item {
     display: flex; align-items: center; gap: 12px; padding: 10px 14px;
     border-radius: 12px; background: var(--bg); cursor: pointer;
-    transition: background .18s, transform .18s;
+    transition: background .18s, transform .18s; -webkit-tap-highlight-color: transparent;
   }
-  .dish-item:hover { background: #ffe8d4; transform: translateX(4px); }
+  .dish-item:hover { background: #ffe8d4; }
+  .dish-item:active { background: #ffd4b0; transform: scale(.98); }
   .dish-item .dish-thumb {
-    width: 46px; height: 46px; border-radius: 10px; object-fit: cover; flex-shrink: 0;
-    background: #e0d4c8;
+    width: 46px; height: 46px; border-radius: 10px; object-fit: cover; flex-shrink: 0; background: #e0d4c8;
   }
-  .dish-item .info { flex: 1; }
-  .dish-item .info strong { font-size: .9rem; color: var(--text); display: block; }
+  .dish-item .info { flex: 1; min-width: 0; }
+  .dish-item .info strong { font-size: .9rem; color: var(--text); display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .dish-item .info span { font-size: .78rem; color: var(--muted); }
-  .dish-item .badge {
-    font-size: .68rem; font-weight: 700; padding: 3px 9px; border-radius: 50px;
-    background: var(--accent2); color: #fff;
-  }
+  .dish-item .badge { font-size: .68rem; font-weight: 700; padding: 3px 9px; border-radius: 50px; background: var(--accent2); color: #fff; flex-shrink: 0; }
   .cuisine-card .see-all {
     display: block; text-align: center; padding: 12px 24px 16px;
     font-size: .82rem; font-weight: 600; color: var(--accent1);
-    text-decoration: none; border-top: 1px solid var(--border);
-    transition: background .18s; cursor: pointer;
+    text-decoration: none; border-top: 1px solid var(--border); cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
   }
-  .cuisine-card .see-all:hover { background: #fff5ee; }
 
+  /* ── DISH PAGE ── */
   #page-dish { animation: fadeInUp .35s ease; }
   @keyframes fadeInUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
-  .dish-page-hero {
-    border-radius: 24px; overflow: hidden; margin-bottom: 32px;
-    position: relative; height: 320px;
-  }
-  .dish-page-hero img {
-    width: 100%; height: 100%; object-fit: cover; display: block;
-  }
-  .dish-page-hero .hero-overlay {
-    position: absolute; inset: 0;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.45) 100%);
-  }
+  .dish-page-hero { border-radius: 24px; overflow: hidden; margin-bottom: 32px; position: relative; height: 320px; }
+  .dish-page-hero img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .dish-page-hero .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.45) 100%); }
   .dish-page-hero .back-btn {
     position: absolute; top: 20px; left: 20px; z-index: 3;
     background: rgba(255,255,255,.22); border: none; border-radius: 50px;
     padding: 9px 20px; color: #fff; font-family: 'DM Sans', sans-serif;
     font-weight: 600; font-size: .85rem; cursor: pointer; backdrop-filter: blur(6px);
-    transition: background .2s;
+    -webkit-tap-highlight-color: transparent; min-height: 44px; display: flex; align-items: center;
   }
-  .dish-page-hero .back-btn:hover { background: rgba(255,255,255,.38); }
   .dish-page-body { max-width: 800px; }
-  .dish-page-body h2 {
-    font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 900;
-    margin-bottom: 6px;
-  }
+  .dish-page-body h2 { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 900; margin-bottom: 6px; }
   .dish-page-body .origin-badge {
     display: inline-flex; align-items: center; gap: 6px;
     background: #f2ebe3; padding: 6px 16px; border-radius: 50px;
     font-size: .82rem; color: var(--muted); font-weight: 600; margin-bottom: 18px;
   }
   .dish-page-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 22px; }
-  .dish-page-tags span {
-    font-size: .78rem; font-weight: 600; padding: 5px 14px; border-radius: 50px;
-    background: #f2ebe3; color: var(--muted);
-  }
+  .dish-page-tags span { font-size: .78rem; font-weight: 600; padding: 5px 14px; border-radius: 50px; background: #f2ebe3; color: var(--muted); }
   .dish-page-tags .hot-tag { background: #fff3e0; color: #e8490f; }
-  .dish-page-desc {
-    font-size: 1rem; line-height: 1.8; color: #4a3020; margin-bottom: 32px;
-    border-left: 4px solid var(--accent2); padding-left: 18px;
-  }
+  .dish-page-desc { font-size: 1rem; line-height: 1.8; color: #4a3020; margin-bottom: 32px; border-left: 4px solid var(--accent2); padding-left: 18px; }
   .dish-page-sections { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-bottom: 32px; }
-  @media (max-width: 640px) { .dish-page-sections { grid-template-columns: 1fr; } }
-  .dish-section-card {
-    background: #fff; border-radius: 18px; padding: 24px;
-    box-shadow: 0 2px 16px rgba(0,0,0,.07);
-  }
-  .dish-section-card h4 {
-    font-size: .72rem; text-transform: uppercase; letter-spacing: .12em;
-    color: var(--muted); margin-bottom: 16px; font-weight: 700;
-  }
+  .dish-section-card { background: #fff; border-radius: 18px; padding: 24px; box-shadow: 0 2px 16px rgba(0,0,0,.07); }
+  .dish-section-card h4 { font-size: .72rem; text-transform: uppercase; letter-spacing: .12em; color: var(--muted); margin-bottom: 16px; font-weight: 700; }
   .ingredient-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
-  .ingredient-list li {
-    display: flex; align-items: flex-start; gap: 10px;
-    font-size: .88rem; color: var(--text); line-height: 1.5;
-  }
-  .ingredient-list li::before {
-    content: '•'; color: var(--accent1); font-size: 1.2rem;
-    line-height: 1; flex-shrink: 0; margin-top: 1px;
-  }
+  .ingredient-list li { display: flex; align-items: flex-start; gap: 10px; font-size: .88rem; color: var(--text); line-height: 1.5; }
+  .ingredient-list li::before { content: '•'; color: var(--accent1); font-size: 1.2rem; line-height: 1; flex-shrink: 0; margin-top: 1px; }
   .steps-list { list-style: none; display: flex; flex-direction: column; gap: 14px; }
-  .steps-list li {
-    display: flex; gap: 14px; align-items: flex-start; font-size: .88rem; line-height: 1.6; color: #4a3020;
-  }
-  .steps-list li .step-num {
-    width: 26px; height: 26px; border-radius: 50%; background: var(--accent1);
-    color: #fff; font-size: .75rem; font-weight: 700; display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0; margin-top: 1px;
-  }
-  .dish-page-yt {
-    background: #fff; border-radius: 18px; padding: 24px;
-    box-shadow: 0 2px 16px rgba(0,0,0,.07); margin-bottom: 32px;
-  }
-  .dish-page-yt h4 {
-    font-size: .72rem; text-transform: uppercase; letter-spacing: .12em;
-    color: var(--muted); margin-bottom: 16px; font-weight: 700;
-  }
+  .steps-list li { display: flex; gap: 14px; align-items: flex-start; font-size: .88rem; line-height: 1.6; color: #4a3020; }
+  .steps-list li .step-num { width: 26px; height: 26px; border-radius: 50%; background: var(--accent1); color: #fff; font-size: .75rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .dish-page-yt { background: #fff; border-radius: 18px; padding: 24px; box-shadow: 0 2px 16px rgba(0,0,0,.07); margin-bottom: 32px; }
+  .dish-page-yt h4 { font-size: .72rem; text-transform: uppercase; letter-spacing: .12em; color: var(--muted); margin-bottom: 16px; font-weight: 700; }
   .yt-link {
     display: flex; align-items: center; gap: 14px;
     padding: 14px 18px; border-radius: 12px; background: #fff7f5;
     border: 2px solid #ffd4c2; text-decoration: none; color: var(--text);
-    transition: border-color .2s, background .2s, transform .15s;
+    transition: all .2s; -webkit-tap-highlight-color: transparent;
   }
-  .yt-link:hover { border-color: #ff0000; background: #fff0ec; transform: translateX(4px); }
-  .yt-icon {
-    width: 44px; height: 44px; border-radius: 10px; background: #ff0000;
-    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-  }
+  .yt-link:active { background: #fff0ec; transform: scale(.98); }
+  .yt-icon { width: 44px; height: 44px; border-radius: 10px; background: #ff0000; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
   .yt-icon svg { width: 22px; height: 22px; fill: #fff; }
   .yt-link .yt-text strong { display: block; font-size: .92rem; margin-bottom: 2px; }
   .yt-link .yt-text span { font-size: .78rem; color: var(--muted); }
@@ -290,26 +197,18 @@
   .dish-action-row button {
     padding: 13px 28px; border-radius: 50px; border: none; cursor: pointer;
     font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: .92rem;
-    transition: transform .15s, box-shadow .15s;
+    -webkit-tap-highlight-color: transparent; min-height: 48px;
   }
-  .dish-action-row button:hover { transform: scale(1.04); box-shadow: 0 4px 16px rgba(0,0,0,.15); }
   .btn-primary { background: var(--accent1); color: #fff; }
   .btn-fav { background: #ffeef0; color: #e74c3c; }
   .btn-secondary { background: #f2ebe3; color: var(--text); }
 
+  /* ── FAVOURITES ── */
   .fav-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); gap: 18px; }
-  .fav-card {
-    background: #fff; border-radius: 16px; overflow: hidden;
-    box-shadow: 0 2px 16px rgba(0,0,0,.07); cursor: pointer;
-    transition: transform .2s;
-  }
-  .fav-card:hover { transform: translateY(-4px); }
-  .fav-card .fav-hero {
-    height: 120px; overflow: hidden;
-  }
-  .fav-card .fav-hero img {
-    width: 100%; height: 100%; object-fit: cover;
-  }
+  .fav-card { background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 16px rgba(0,0,0,.07); cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .fav-card:active { transform: scale(.97); }
+  .fav-card .fav-hero { height: 120px; overflow: hidden; }
+  .fav-card .fav-hero img { width: 100%; height: 100%; object-fit: cover; }
   .fav-card .fav-info { padding: 14px; }
   .fav-card .fav-info strong { font-size: .9rem; display: block; margin-bottom: 2px; }
   .fav-card .fav-info span { font-size: .78rem; color: var(--muted); }
@@ -317,73 +216,238 @@
   .empty-state .big { font-size: 3rem; margin-bottom: 12px; }
   .empty-state p { font-size: .95rem; }
 
+  /* ── SEARCH ── */
   .search-result-item {
     display: flex; align-items: center; gap: 16px;
     padding: 16px 18px; background: #fff; border-radius: 14px;
     margin-bottom: 12px; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,.06);
-    transition: transform .18s, box-shadow .18s;
+    -webkit-tap-highlight-color: transparent;
   }
-  .search-result-item:hover { transform: translateX(4px); box-shadow: 0 4px 20px rgba(0,0,0,.1); }
-  .search-result-item .sr-img {
-    width: 56px; height: 56px; border-radius: 10px; object-fit: cover; flex-shrink: 0;
-    background: #e0d4c8;
-  }
+  .search-result-item:active { transform: scale(.98); }
+  .search-result-item .sr-img { width: 56px; height: 56px; border-radius: 10px; object-fit: cover; flex-shrink: 0; background: #e0d4c8; }
   .search-result-item .sr-info strong { font-size: .95rem; display: block; }
   .search-result-item .sr-info span { font-size: .8rem; color: var(--muted); }
 
+  /* ── TRENDING ── */
   .trending-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px,1fr)); gap: 16px; }
-  .trend-card {
-    background: #fff; border-radius: 16px; overflow: hidden; text-align: center;
-    box-shadow: 0 2px 12px rgba(0,0,0,.07); cursor: pointer;
-    transition: transform .2s;
-  }
-  .trend-card:hover { transform: translateY(-4px); }
+  .trend-card { background: #fff; border-radius: 16px; overflow: hidden; text-align: center; box-shadow: 0 2px 12px rgba(0,0,0,.07); cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .trend-card:active { transform: scale(.97); }
   .trend-card .t-hero { height: 110px; overflow: hidden; }
   .trend-card .t-hero img { width: 100%; height: 100%; object-fit: cover; }
   .trend-card .t-info { padding: 10px 12px 14px; }
   .trend-card .t-info strong { font-size: .85rem; display: block; margin-bottom: 2px; }
   .trend-card .t-info span { font-size: .74rem; color: var(--muted); }
 
+  /* ── TOAST ── */
   #toast {
-    position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(80px);
+    position: fixed; bottom: calc(80px + var(--safe-bottom)); left: 50%; transform: translateX(-50%) translateY(80px);
     background: var(--sidebar); color: #fff; padding: 12px 28px;
     border-radius: 50px; font-size: .88rem; font-weight: 500;
-    box-shadow: 0 8px 30px rgba(0,0,0,.25);
-    z-index: 600; transition: transform .3s ease;
+    box-shadow: 0 8px 30px rgba(0,0,0,.25); z-index: 600; transition: transform .3s ease;
+    white-space: nowrap;
   }
   #toast.show { transform: translateX(-50%) translateY(0); }
 
+  /* ── BOTTOM NAV (mobile) ── */
+  #bottom-nav {
+    display: none;
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 300;
+    background: var(--sidebar);
+    padding: 0 0 var(--safe-bottom);
+    box-shadow: 0 -4px 24px rgba(0,0,0,.25);
+  }
+  #bottom-nav .nav-inner {
+    display: flex; align-items: stretch;
+  }
+  #bottom-nav .nav-item {
+    flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 10px 4px 10px; cursor: pointer; gap: 4px;
+    color: #6a5040; transition: color .2s, background .2s;
+    -webkit-tap-highlight-color: transparent; border: none; background: none;
+    font-family: 'DM Sans', sans-serif; min-height: 60px;
+  }
+  #bottom-nav .nav-item.active, #bottom-nav .nav-item:active { color: #fff; background: #2e1e0e; }
+  #bottom-nav .nav-item .nav-icon { font-size: 1.4rem; line-height: 1; }
+  #bottom-nav .nav-item .nav-label { font-size: .6rem; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
+
+  /* ── MOBILE DRAWER ── */
+  #mobile-drawer-overlay {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 400;
+    opacity: 0; transition: opacity .3s;
+  }
+  #mobile-drawer-overlay.open { opacity: 1; }
+  #mobile-drawer {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 500;
+    background: var(--sidebar); border-radius: 24px 24px 0 0;
+    padding: 16px 0 calc(20px + var(--safe-bottom));
+    transform: translateY(100%); transition: transform .35s cubic-bezier(.32,.72,0,1);
+    max-height: 80vh; overflow-y: auto;
+  }
+  #mobile-drawer.open { transform: translateY(0); }
+  #mobile-drawer .drawer-handle {
+    width: 40px; height: 4px; background: #3e2810; border-radius: 4px;
+    margin: 0 auto 20px; cursor: grab;
+  }
+  #mobile-drawer .drawer-title {
+    font-family: 'Playfair Display', serif; color: #c9b49a;
+    font-size: 1rem; font-weight: 700; padding: 0 24px 12px;
+    border-bottom: 1px solid #2e1e0e;
+  }
+  #mobile-drawer a {
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px 24px; color: #c9b49a; text-decoration: none;
+    font-size: .92rem; font-weight: 500; -webkit-tap-highlight-color: transparent;
+    cursor: pointer; transition: background .15s;
+  }
+  #mobile-drawer a:active, #mobile-drawer a.active { background: #2e1e0e; color: #fff; }
+  #mobile-drawer a .icon { font-size: 1.2rem; width: 26px; text-align: center; }
+  #mobile-drawer .drawer-section { font-size: .62rem; letter-spacing: .15em; text-transform: uppercase; color: #5a4030; padding: 14px 24px 6px; font-weight: 600; }
+
+  /* ── MOBILE SEARCH MODAL ── */
+  #mobile-search-overlay {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,.6); z-index: 600;
+    opacity: 0; transition: opacity .25s;
+  }
+  #mobile-search-overlay.open { opacity: 1; }
+  #mobile-search-modal {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 700;
+    background: var(--bg); padding: calc(16px + var(--safe-top)) 16px 20px;
+    transform: translateY(-100%); transition: transform .35s cubic-bezier(.32,.72,0,1);
+    box-shadow: 0 4px 30px rgba(0,0,0,.2);
+  }
+  #mobile-search-modal.open { transform: translateY(0); }
+  .mobile-search-bar {
+    display: flex; align-items: center; gap: 10px;
+  }
+  .mobile-search-bar input {
+    flex: 1; padding: 13px 18px; border-radius: 50px; border: 2px solid var(--border);
+    font-size: 1rem; font-family: 'DM Sans', sans-serif; background: #fff;
+    outline: none; color: var(--text);
+  }
+  .mobile-search-bar input:focus { border-color: var(--accent1); }
+  .mobile-search-bar .cancel-btn {
+    background: none; border: none; color: var(--accent1); font-family: 'DM Sans', sans-serif;
+    font-weight: 600; font-size: .92rem; cursor: pointer; padding: 8px; white-space: nowrap;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* ── SCROLLBARS ── */
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: #ddd; border-radius: 6px; }
 
-  @media (max-width: 768px) {
-    #sidebar { transform: translateX(-100%); }
-    #sidebar.open { transform: translateX(0); }
-    #main { margin-left: 0; }
-    #content { padding: 20px 18px 50px; }
-    #header { padding: 24px 20px 20px; }
-    #header h1 { font-size: 1.7rem; }
-    .cuisine-grid { grid-template-columns: 1fr; }
-    #hamburger { display: flex; }
-    .dish-page-body h2 { font-size: 1.6rem; }
+  /* ── DESKTOP ── */
+  @media (min-width: 769px) {
+    #bottom-nav { display: none !important; }
+    #mobile-drawer-overlay, #mobile-drawer { display: none !important; }
+    #mobile-search-overlay, #mobile-search-modal { display: none !important; }
+    #sidebar { display: flex !important; }
   }
-  #hamburger {
-    display: none; position: fixed; top: 16px; left: 16px; z-index: 200;
-    background: var(--sidebar); color: #fff; border: none; border-radius: 10px;
-    width: 42px; height: 42px; align-items: center; justify-content: center;
-    font-size: 1.3rem; cursor: pointer;
+
+  /* ── TABLET & MOBILE ── */
+  @media (max-width: 768px) {
+    #sidebar { display: none !important; }
+    #bottom-nav { display: block; }
+    #main { margin-left: 0; padding-bottom: calc(60px + var(--safe-bottom)); }
+    #header { padding: 20px 16px 18px; }
+    #header h1 { font-size: 1.6rem; gap: 10px; }
+    #header h1 .header-logo-svg { width: 40px; height: 40px; }
+    #header::before { font-size: 1.3rem; }
+    .tagline-ticker span { font-size: .8rem; }
+    #search-wrap { display: none; }
+    #content { padding: 20px 16px 24px; }
+    .sec-title { font-size: 1.35rem; }
+    .cuisine-grid { grid-template-columns: 1fr; gap: 18px; }
+    .trending-grid { grid-template-columns: repeat(auto-fill, minmax(140px,1fr)); gap: 12px; }
+    .fav-grid { grid-template-columns: repeat(auto-fill, minmax(150px,1fr)); gap: 14px; }
+    .dish-page-hero { height: 220px; border-radius: 16px; margin-bottom: 20px; }
+    .dish-page-body h2 { font-size: 1.5rem; }
+    .dish-page-sections { grid-template-columns: 1fr; gap: 16px; }
+    .dish-page-desc { font-size: .92rem; }
+    .dish-action-row { gap: 10px; }
+    .dish-action-row button { padding: 12px 22px; font-size: .85rem; }
+    .filter-row { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 6px; margin-right: -16px; padding-right: 16px; scrollbar-width: none; }
+    .filter-row::-webkit-scrollbar { display: none; }
+    #toast { bottom: calc(68px + var(--safe-bottom)); font-size: .82rem; padding: 10px 20px; }
+  }
+
+  /* ── SMALL MOBILE ── */
+  @media (max-width: 380px) {
+    #header h1 { font-size: 1.35rem; }
+    #bottom-nav .nav-label { font-size: .56rem; }
+    .cuisine-header .flag { font-size: 2rem; }
+  }
+
+  /* ── FAB SEARCH BUTTON (mobile) ── */
+  #fab-search {
+    display: none;
+    position: fixed; top: calc(12px + var(--safe-top)); right: 16px; z-index: 100;
+    width: 44px; height: 44px; border-radius: 50%;
+    background: rgba(255,255,255,.9); border: none; cursor: pointer;
+    font-size: 1.2rem; box-shadow: 0 4px 16px rgba(0,0,0,.2);
+    align-items: center; justify-content: center;
+    backdrop-filter: blur(8px); -webkit-tap-highlight-color: transparent;
+    transition: transform .15s;
+  }
+  #fab-search:active { transform: scale(.92); }
+  @media (max-width: 768px) { #fab-search { display: flex; } }
+
+  /* ── CUISINE PAGE ── */
+  #cuisine-hero { border-radius: 18px; overflow: hidden; margin-bottom: 28px; }
+  #cuisine-dish-list .dish-item { margin-bottom: 10px; }
+
+  /* ── ABOUT ── */
+  #page-about .about-content { max-width: 640px; line-height: 1.8; color: #4a3020; font-size: .95rem; }
+  #page-about .about-content p { margin-bottom: 16px; }
+
+  /* Active press feedback for touch */
+  @media (hover: none) {
+    .cuisine-card:active { transform: scale(.98); box-shadow: 0 4px 12px rgba(0,0,0,.1); }
+    .trend-card:active { transform: scale(.97); }
+    .search-result-item:active { transform: scale(.98); }
+    .dish-item:active { transform: scale(.98); }
   }
 </style>
 </head>
 <body>
 
-<button id="hamburger" onclick="toggleSidebar()">☰</button>
+<!-- FAB Search (mobile) -->
+<button id="fab-search" onclick="openMobileSearch()" aria-label="Search">🔍</button>
 
+<!-- Mobile Search Modal -->
+<div id="mobile-search-overlay" onclick="closeMobileSearch()"></div>
+<div id="mobile-search-modal">
+  <div class="mobile-search-bar">
+    <input type="text" id="mobile-search-input" placeholder="Search dishes, cuisines…"
+      oninput="mobileLiveSearch(this.value)"
+      onkeydown="if(event.key==='Enter'){doMobileSearch();closeMobileSearch();}"
+      autocomplete="off" autocorrect="off" spellcheck="false"/>
+    <button class="cancel-btn" onclick="closeMobileSearch()">Cancel</button>
+  </div>
+</div>
+
+<!-- Mobile Cuisine Drawer -->
+<div id="mobile-drawer-overlay" onclick="closeDrawer()"></div>
+<div id="mobile-drawer">
+  <div class="drawer-handle"></div>
+  <div class="drawer-title">🌍 Choose a Cuisine</div>
+  <a onclick="closeDrawerAndGo('Italian')"><span class="icon">🍕</span> Italian</a>
+  <a onclick="closeDrawerAndGo('Indian')"><span class="icon">🍛</span> Indian</a>
+  <a onclick="closeDrawerAndGo('Japanese')"><span class="icon">🍣</span> Japanese</a>
+  <a onclick="closeDrawerAndGo('Mexican')"><span class="icon">🌮</span> Mexican</a>
+  <a onclick="closeDrawerAndGo('Chinese')"><span class="icon">🥡</span> Chinese</a>
+  <a onclick="closeDrawerAndGo('French')"><span class="icon">🥐</span> French</a>
+  <a onclick="closeDrawerAndGo('Thai')"><span class="icon">🍜</span> Thai</a>
+  <a onclick="closeDrawerAndGo('American')"><span class="icon">🍔</span> American</a>
+  <div class="drawer-section">More</div>
+  <a onclick="closeDrawerAndPage('about')"><span class="icon">ℹ️</span> About</a>
+</div>
+
+<!-- Desktop Sidebar -->
 <aside id="sidebar">
   <div class="logo-area" onclick="goHome()" title="Go to Home">
-    <div class="logo-svg-wrap">
-      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+    <div style="display:flex;align-items:center;justify-content:center;">
+      <svg width="48" height="48" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
         <ellipse cx="32" cy="48" rx="26" ry="7" fill="#c8a96e" opacity=".5"/>
         <ellipse cx="32" cy="46" rx="24" ry="6" fill="#e8d5b0"/>
         <ellipse cx="32" cy="44" rx="20" ry="5" fill="#f5ead0"/>
@@ -391,20 +455,15 @@
         <ellipse cx="27" cy="22" rx="7" ry="5" fill="#3aab5e" transform="rotate(-15 27 22)"/>
         <ellipse cx="37" cy="25" rx="5" ry="7" fill="#3aab5e" transform="rotate(10 37 25)"/>
         <ellipse cx="30" cy="34" rx="4" ry="3" fill="#3aab5e" transform="rotate(-5 30 34)"/>
-        <ellipse cx="39" cy="20" rx="3" ry="2" fill="#3aab5e"/>
         <circle cx="25" cy="20" r="4" fill="rgba(255,255,255,.18)"/>
-        <ellipse cx="32" cy="28" rx="16" ry="6" fill="none" stroke="rgba(255,255,255,.15)" stroke-width=".8"/>
-        <line x1="16" y1="28" x2="48" y2="28" stroke="rgba(255,255,255,.15)" stroke-width=".8"/>
         <g transform="translate(8, 10)">
           <rect x="3.5" y="0" width="1.2" height="22" rx=".6" fill="#c9a96e"/>
           <rect x="1" y="0" width="1" height="9" rx=".5" fill="#c9a96e"/>
           <rect x="6" y="0" width="1" height="9" rx=".5" fill="#c9a96e"/>
-          <rect x="3.5" y="6" width="1.2" height="4" rx=".5" fill="#c9a96e"/>
         </g>
         <g transform="translate(48, 10)">
           <rect x="2.5" y="10" width="1.2" height="14" rx=".6" fill="#c9a96e"/>
           <ellipse cx="3.1" cy="7" rx="3" ry="4" fill="#c9a96e"/>
-          <ellipse cx="3.1" cy="7" rx="2" ry="2.8" fill="#e8d5b0" opacity=".6"/>
         </g>
       </svg>
     </div>
@@ -429,8 +488,8 @@
   <div class="sidebar-footer">© 2025 World on a Plate</div>
 </aside>
 
+<!-- Main -->
 <div id="main">
-
   <div id="header" onclick="goHome()" title="Go to Home">
     <h1>
       <svg class="header-logo-svg" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
@@ -455,7 +514,6 @@
       </svg>
       World on a Plate
     </h1>
-    <!-- Scrolling ticker — replaces the static tagline paragraph -->
     <div class="tagline-ticker-wrap" onclick="event.stopPropagation()">
       <div class="tagline-ticker">
         <span>Discover iconic dishes from every corner of the globe</span>
@@ -463,7 +521,8 @@
       </div>
     </div>
     <div id="search-wrap" onclick="event.stopPropagation()">
-      <input type="text" id="search-input" placeholder="Search dishes, cuisines, ingredients…" oninput="liveSearch(this.value)" onkeydown="if(event.key==='Enter')doSearch()"/>
+      <input type="text" id="search-input" placeholder="Search dishes, cuisines, ingredients…"
+        oninput="liveSearch(this.value)" onkeydown="if(event.key==='Enter')doSearch()"/>
       <button onclick="doSearch()">Search</button>
     </div>
   </div>
@@ -502,8 +561,8 @@
     </div>
 
     <div id="page-cuisine" class="page">
-      <div id="cuisine-hero" style="border-radius:18px;overflow:hidden;margin-bottom:28px;"></div>
-      <div class="dish-list" id="cuisine-dish-list"></div>
+      <div id="cuisine-hero"></div>
+      <div id="cuisine-dish-list"></div>
     </div>
 
     <div id="page-dish" class="page">
@@ -527,7 +586,7 @@
             <ol class="steps-list" id="dish-page-steps"></ol>
           </div>
         </div>
-        <div class="dish-page-yt" id="dish-page-yt">
+        <div class="dish-page-yt">
           <h4>▶ Watch on YouTube</h4>
           <a class="yt-link" id="dish-yt-link" href="#" target="_blank" rel="noopener noreferrer">
             <div class="yt-icon">
@@ -549,9 +608,9 @@
     <div id="page-about" class="page">
       <div class="sec-title">About World on a Plate</div>
       <div class="sec-sub">Our story</div>
-      <div style="max-width:640px;line-height:1.8;color:#4a3020;font-size:.95rem;">
-        <p style="margin-bottom:16px;">🌍 <strong>World on a Plate</strong> is a passion project celebrating the incredible diversity of food across our planet. From the spicy street food of Bangkok to the refined bistros of Paris, every dish tells a story.</p>
-        <p style="margin-bottom:16px;">Our mission is simple: make the world's best recipes accessible, inspiring, and fun to explore — no matter where you are.</p>
+      <div class="about-content">
+        <p>🌍 <strong>World on a Plate</strong> is a passion project celebrating the incredible diversity of food across our planet. From the spicy street food of Bangkok to the refined bistros of Paris, every dish tells a story.</p>
+        <p>Our mission is simple: make the world's best recipes accessible, inspiring, and fun to explore — no matter where you are.</p>
         <p>Built with ❤️ by food lovers, for food lovers.</p>
       </div>
     </div>
@@ -559,843 +618,102 @@
   </div>
 </div>
 
+<!-- Bottom Nav (mobile) -->
+<div id="bottom-nav">
+  <div class="nav-inner">
+    <button class="nav-item active" id="nav-home" onclick="showPage('home')">
+      <span class="nav-icon">🏠</span>
+      <span class="nav-label">Home</span>
+    </button>
+    <button class="nav-item" id="nav-trending" onclick="showPage('trending')">
+      <span class="nav-icon">🔥</span>
+      <span class="nav-label">Trending</span>
+    </button>
+    <button class="nav-item" id="nav-cuisines" onclick="openDrawer()">
+      <span class="nav-icon">🌍</span>
+      <span class="nav-label">Cuisines</span>
+    </button>
+    <button class="nav-item" id="nav-favourites" onclick="showPage('favourites')">
+      <span class="nav-icon">❤️</span>
+      <span class="nav-label">Saved</span>
+    </button>
+  </div>
+</div>
+
 <div id="toast"></div>
 
 <script>
-
 const CUISINES = [
   {
     id: 'Italian', flag: '🇮🇹', label: 'Italian', region: 'European',
     tagline: 'Pasta, Pizza & Pure Passion', c1: '#009246', c2: '#ce2b37',
     dishes: [
-      {
-        name:'Margherita Pizza',
-        img:'https://images.unsplash.com/photo-1604068549290-dea0e4a305ca?w=600&q=80',
-        desc:'The iconic Neapolitan pizza with San Marzano tomatoes, fresh mozzarella, and basil — simple perfection born in Naples in 1889, named in honour of Queen Margherita of Savoy.',
-        origin:'Naples, Italy', tags:['Vegetarian','Baked','Classic'],
-        ingredients:[
-          '300g Tipo 00 or bread flour',
-          '200ml warm water (about 38°C)',
-          '7g active dry yeast',
-          '1 tsp fine sea salt',
-          '1 tbsp extra-virgin olive oil',
-          '200g San Marzano tomatoes (crushed by hand)',
-          '1 garlic clove, minced',
-          '200g fresh mozzarella di bufala, torn',
-          'A small handful of fresh basil leaves',
-          'Pinch of sugar',
-          'Drizzle of high-quality extra-virgin olive oil to finish'
-        ],
-        steps:[
-          'Mix yeast into warm water, let sit 5 min until frothy.',
-          'Combine flour and salt; add yeast mixture and olive oil.',
-          'Knead for 10 minutes until smooth and elastic.',
-          'Cover and let rise 1–2 hours until doubled.',
-          'Mix crushed tomatoes, garlic, a pinch of sugar, salt.',
-          'Preheat oven to its maximum (250–300°C) with a baking stone or steel.',
-          'Stretch dough into a 30cm round on a floured surface.',
-          'Spread tomato sauce leaving a 1cm border.',
-          'Tear mozzarella on top.',
-          'Bake 8–12 min until crust is charred and blistered.',
-          'Finish with fresh basil and a drizzle of olive oil.'
-        ],
-        category:'Vegetarian', trending:true,
-        ytUrl:'https://www.youtube.com/watch?v=1-SJGQ2HLp8',
-        ytTitle:'Authentic Neapolitan Margherita Pizza – Joshua Weissman'
-      },
-      {
-        name:'Spaghetti Carbonara',
-        img:'https://images.unsplash.com/photo-1612874742237-6526221588e3?w=600&q=80',
-        desc:'Creamy egg-and-guanciale sauce clinging to al-dente spaghetti — Rome\'s beloved weeknight classic. The creaminess comes entirely from eggs and cheese — never cream.',
-        origin:'Rome, Italy', tags:['Pasta','Creamy','Quick'],
-        ingredients:[
-          '400g spaghetti (or rigatoni)',
-          '200g guanciale (or pancetta), cut into small cubes',
-          '4 large egg yolks + 2 whole eggs',
-          '100g Pecorino Romano, finely grated',
-          '50g Parmigiano Reggiano, finely grated',
-          'Freshly cracked black pepper (generous amount)',
-          '1 tbsp coarse sea salt (for pasta water)',
-          '2 tbsp pasta cooking water (reserved)'
-        ],
-        steps:[
-          'Bring a large pot of salted water to a boil.',
-          'Fry guanciale in a dry pan over medium heat until golden and crispy.',
-          'Remove pan from heat and let cool slightly.',
-          'Whisk egg yolks, eggs, most of the cheeses, and lots of black pepper.',
-          'Cook spaghetti until 1 minute before al dente; reserve 1 cup pasta water.',
-          'Add pasta to guanciale pan off-heat; toss well.',
-          'Pour egg mixture over, tossing constantly and adding pasta water a splash at a time.',
-          'Sauce should be creamy and glossy — not scrambled.',
-          'Serve immediately topped with remaining cheese and pepper.'
-        ],
-        category:'Classic', trending:true,
-        ytUrl:'https://www.youtube.com/watch?v=D_2DBLAt57c',
-        ytTitle:'Spaghetti Carbonara – Italia Squisita (Authentic Roman)'
-      },
-      {
-        name:'Ribollita',
-        img:'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=600&q=80',
-        desc:'Thick Tuscan bread-and-vegetable stew that gets better the next day — literally meaning "reboiled", a testament to Florentine peasant genius.',
-        origin:'Tuscany, Italy', tags:['Vegetarian','Stew','Hearty'],
-        ingredients:[
-          '400g cooked cannellini beans (or 2 cans)',
-          '200g Tuscan kale (cavolo nero), stems removed',
-          '150g Savoy cabbage, shredded',
-          '200g stale crusty bread, torn',
-          '2 medium carrots, diced',
-          '2 stalks celery, diced',
-          '1 large onion, diced',
-          '3 cloves garlic, minced',
-          '400g canned whole tomatoes',
-          '1 litre vegetable broth',
-          '4 tbsp olive oil',
-          '1 sprig fresh rosemary',
-          'Salt, pepper, chilli flakes to taste'
-        ],
-        steps:[
-          'Sauté onion, carrot, celery in olive oil over medium heat for 10 min.',
-          'Add garlic and rosemary; cook 2 more minutes.',
-          'Add tomatoes; crush and simmer 10 min.',
-          'Add kale and cabbage; stir to wilt.',
-          'Add beans and broth; simmer 30 minutes.',
-          'Add torn bread; simmer 10 min more until thick.',
-          'For true ribollita, reheat the next day for best flavour.',
-          'Serve with a generous drizzle of olive oil.'
-        ],
-        category:'Vegetarian', trending:false,
-        ytUrl:'https://www.youtube.com/watch?v=sp22f8VrcXY',
-        ytTitle:'Ribollita – The Classic Tuscan Bread Soup'
-      },
+      { name:'Margherita Pizza', img:'https://images.unsplash.com/photo-1604068549290-dea0e4a305ca?w=600&q=80', desc:'The iconic Neapolitan pizza with San Marzano tomatoes, fresh mozzarella, and basil — simple perfection born in Naples in 1889, named in honour of Queen Margherita of Savoy.', origin:'Naples, Italy', tags:['Vegetarian','Baked','Classic'], ingredients:['300g Tipo 00 or bread flour','200ml warm water (about 38°C)','7g active dry yeast','1 tsp fine sea salt','1 tbsp extra-virgin olive oil','200g San Marzano tomatoes (crushed by hand)','1 garlic clove, minced','200g fresh mozzarella di bufala, torn','A small handful of fresh basil leaves','Pinch of sugar','Drizzle of high-quality extra-virgin olive oil to finish'], steps:['Mix yeast into warm water, let sit 5 min until frothy.','Combine flour and salt; add yeast mixture and olive oil.','Knead for 10 minutes until smooth and elastic.','Cover and let rise 1–2 hours until doubled.','Mix crushed tomatoes, garlic, a pinch of sugar, salt.','Preheat oven to its maximum (250–300°C) with a baking stone or steel.','Stretch dough into a 30cm round on a floured surface.','Spread tomato sauce leaving a 1cm border.','Tear mozzarella on top.','Bake 8–12 min until crust is charred and blistered.','Finish with fresh basil and a drizzle of olive oil.'], category:'Vegetarian', trending:true, ytUrl:'https://www.youtube.com/watch?v=1-SJGQ2HLp8', ytTitle:'Authentic Neapolitan Margherita Pizza – Joshua Weissman' },
+      { name:'Spaghetti Carbonara', img:'https://images.unsplash.com/photo-1612874742237-6526221588e3?w=600&q=80', desc:'Creamy egg-and-guanciale sauce clinging to al-dente spaghetti — Rome\'s beloved weeknight classic. The creaminess comes entirely from eggs and cheese — never cream.', origin:'Rome, Italy', tags:['Pasta','Creamy','Quick'], ingredients:['400g spaghetti (or rigatoni)','200g guanciale (or pancetta), cut into small cubes','4 large egg yolks + 2 whole eggs','100g Pecorino Romano, finely grated','50g Parmigiano Reggiano, finely grated','Freshly cracked black pepper (generous amount)','1 tbsp coarse sea salt (for pasta water)','2 tbsp pasta cooking water (reserved)'], steps:['Bring a large pot of salted water to a boil.','Fry guanciale in a dry pan over medium heat until golden and crispy.','Remove pan from heat and let cool slightly.','Whisk egg yolks, eggs, most of the cheeses, and lots of black pepper.','Cook spaghetti until 1 minute before al dente; reserve 1 cup pasta water.','Add pasta to guanciale pan off-heat; toss well.','Pour egg mixture over, tossing constantly and adding pasta water a splash at a time.','Sauce should be creamy and glossy — not scrambled.','Serve immediately topped with remaining cheese and pepper.'], category:'Classic', trending:true, ytUrl:'https://www.youtube.com/watch?v=D_2DBLAt57c', ytTitle:'Spaghetti Carbonara – Italia Squisita (Authentic Roman)' },
+      { name:'Ribollita', img:'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=600&q=80', desc:'Thick Tuscan bread-and-vegetable stew that gets better the next day — literally meaning "reboiled", a testament to Florentine peasant genius.', origin:'Tuscany, Italy', tags:['Vegetarian','Stew','Hearty'], ingredients:['400g cooked cannellini beans (or 2 cans)','200g Tuscan kale (cavolo nero), stems removed','150g Savoy cabbage, shredded','200g stale crusty bread, torn','2 medium carrots, diced','2 stalks celery, diced','1 large onion, diced','3 cloves garlic, minced','400g canned whole tomatoes','1 litre vegetable broth','4 tbsp olive oil','1 sprig fresh rosemary','Salt, pepper, chilli flakes to taste'], steps:['Sauté onion, carrot, celery in olive oil over medium heat for 10 min.','Add garlic and rosemary; cook 2 more minutes.','Add tomatoes; crush and simmer 10 min.','Add kale and cabbage; stir to wilt.','Add beans and broth; simmer 30 minutes.','Add torn bread; simmer 10 min more until thick.','For true ribollita, reheat the next day for best flavour.','Serve with a generous drizzle of olive oil.'], category:'Vegetarian', trending:false, ytUrl:'https://www.youtube.com/watch?v=sp22f8VrcXY', ytTitle:'Ribollita – The Classic Tuscan Bread Soup' },
     ]
   },
   {
     id: 'Indian', flag: '🇮🇳', label: 'Indian', region: 'Asian',
     tagline: 'Spices, Warmth & Bold Flavours', c1: '#ff9933', c2: '#138808',
     dishes: [
-      {
-        name:'Butter Chicken',
-        img:'https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?w=600&q=80',
-        desc:'Tender chicken in a rich, velvety tomato-cream sauce — the dish that conquered the world. Created by accident in Delhi in the 1950s at Moti Mahal restaurant.',
-        origin:'Delhi, India', tags:['Creamy','Spiced','Iconic'],
-        ingredients:[
-          '700g boneless chicken thighs, cut into pieces',
-          '200g full-fat yogurt',
-          '2 tsp garam masala',
-          '1 tsp cumin powder',
-          '1 tsp coriander powder',
-          '1 tsp turmeric',
-          '1 tsp Kashmiri red chilli powder',
-          '3 tbsp unsalted butter',
-          '1 large onion, roughly chopped',
-          '6 cloves garlic + 2cm ginger piece',
-          '400g canned crushed tomatoes',
-          '150ml heavy cream',
-          '1 tbsp kasuri methi (dried fenugreek leaves)',
-          '1 tsp sugar',
-          'Salt to taste'
-        ],
-        steps:[
-          'Marinate chicken in yogurt, half the spices, and salt for at least 2 hours.',
-          'Grill or broil chicken until slightly charred; set aside.',
-          'In a pan, melt butter; sauté onion until golden.',
-          'Add garlic-ginger paste; cook 2 min.',
-          'Add tomatoes and remaining spices; simmer 15 min.',
-          'Blend sauce until completely smooth; strain if desired.',
-          'Return to heat; add cream, kasuri methi, and sugar.',
-          'Add grilled chicken; simmer 10–15 min.',
-          'Adjust seasoning; finish with a knob of butter.'
-        ],
-        category:'Classic', trending:true,
-        ytUrl:'https://www.youtube.com/watch?v=a03U45jFxOI',
-        ytTitle:'Restaurant-Style Butter Chicken – Ranveer Brar'
-      },
-      {
-        name:'Masala Dosa',
-        img:'https://images.unsplash.com/photo-1668236543090-82eba5ee5976?w=600&q=80',
-        desc:'Crispy fermented rice crepe wrapped around spiced potato filling — South India\'s breakfast king, beloved from Karnataka to Tamil Nadu.',
-        origin:'Karnataka, India', tags:['Vegetarian','Crispy','Breakfast'],
-        ingredients:[
-          '3 cups idli rice (or parboiled rice)',
-          '1 cup urad dal (split black lentils)',
-          '1 tsp fenugreek seeds',
-          '1 tsp salt',
-          'Water as needed for batter',
-          '4 large potatoes, boiled and mashed',
-          '1 large onion, thinly sliced',
-          '2 green chillies, chopped',
-          '1 tsp mustard seeds',
-          '1 tsp turmeric',
-          '8–10 curry leaves',
-          '2 tbsp oil + oil for cooking dosas',
-          'Fresh coriander leaves'
-        ],
-        steps:[
-          'Soak rice and dal separately for 6 hours; grind to smooth batter.',
-          'Ferment batter overnight (8–12 hours) in a warm place.',
-          'Sauté mustard seeds, curry leaves, onion; add chillies, turmeric.',
-          'Mix in mashed potatoes; season; fold in coriander.',
-          'Heat a cast-iron griddle; pour a ladleful of batter.',
-          'Spread in concentric circles to form a thin crepe.',
-          'Drizzle oil around edges; cook until golden and crispy.',
-          'Place potato filling in centre; fold dosa over.',
-          'Serve immediately with sambar and coconut chutney.'
-        ],
-        category:'Vegetarian', trending:true,
-        ytUrl:'https://www.youtube.com/watch?v=mDqkxZ3UVzc',
-        ytTitle:'Perfect Crispy Masala Dosa – Hebbar\'s Kitchen'
-      },
-      {
-        name:'Dal Makhani',
-        img:'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=600&q=80',
-        desc:'Black lentils slow-cooked overnight with butter and cream — the ultimate comfort dal from Punjab, traditionally simmered on a wood-fire for 24 hours.',
-        origin:'Punjab, India', tags:['Vegetarian','Slow-cooked','Rich'],
-        ingredients:[
-          '200g whole black urad lentils (sabut urad)',
-          '50g red kidney beans',
-          '3 tbsp unsalted butter + extra to finish',
-          '2 tbsp oil',
-          '1 large onion, finely chopped',
-          '1 tbsp garlic-ginger paste',
-          '400g canned crushed tomatoes',
-          '1 tsp garam masala',
-          '1 tsp cumin seeds',
-          '1 tsp Kashmiri chilli powder',
-          '100ml heavy cream',
-          'Salt to taste',
-          'Fresh coriander to garnish'
-        ],
-        steps:[
-          'Soak lentils and kidney beans overnight in cold water.',
-          'Pressure cook with salt and water for 20–25 min until soft.',
-          'In a heavy pot, heat butter and oil; fry cumin seeds.',
-          'Add onion; cook on medium heat until deep golden.',
-          'Add garlic-ginger paste; cook 2 min.',
-          'Add tomatoes and spices; cook down 15 min.',
-          'Add cooked dal; mash some lentils against the pot.',
-          'Simmer on very low heat for 1–2 hours, stirring occasionally.',
-          'Stir in cream; finish with a generous knob of butter.',
-          'Garnish with coriander; serve with naan or rice.'
-        ],
-        category:'Vegetarian', trending:false,
-        ytUrl:'https://www.youtube.com/watch?v=ca51e7nMI2g',
-        ytTitle:'Dal Makhani – The Ultimate Dhaba Style Recipe'
-      },
+      { name:'Butter Chicken', img:'https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?w=600&q=80', desc:'Tender chicken in a rich, velvety tomato-cream sauce — the dish that conquered the world. Created by accident in Delhi in the 1950s at Moti Mahal restaurant.', origin:'Delhi, India', tags:['Creamy','Spiced','Iconic'], ingredients:['700g boneless chicken thighs, cut into pieces','200g full-fat yogurt','2 tsp garam masala','1 tsp cumin powder','1 tsp coriander powder','1 tsp turmeric','1 tsp Kashmiri red chilli powder','3 tbsp unsalted butter','1 large onion, roughly chopped','6 cloves garlic + 2cm ginger piece','400g canned crushed tomatoes','150ml heavy cream','1 tbsp kasuri methi (dried fenugreek leaves)','1 tsp sugar','Salt to taste'], steps:['Marinate chicken in yogurt, half the spices, and salt for at least 2 hours.','Grill or broil chicken until slightly charred; set aside.','In a pan, melt butter; sauté onion until golden.','Add garlic-ginger paste; cook 2 min.','Add tomatoes and remaining spices; simmer 15 min.','Blend sauce until completely smooth; strain if desired.','Return to heat; add cream, kasuri methi, and sugar.','Add grilled chicken; simmer 10–15 min.','Adjust seasoning; finish with a knob of butter.'], category:'Classic', trending:true, ytUrl:'https://www.youtube.com/watch?v=a03U45jFxOI', ytTitle:'Restaurant-Style Butter Chicken – Ranveer Brar' },
+      { name:'Masala Dosa', img:'https://images.unsplash.com/photo-1668236543090-82eba5ee5976?w=600&q=80', desc:'Crispy fermented rice crepe wrapped around spiced potato filling — South India\'s breakfast king, beloved from Karnataka to Tamil Nadu.', origin:'Karnataka, India', tags:['Vegetarian','Crispy','Breakfast'], ingredients:['3 cups idli rice (or parboiled rice)','1 cup urad dal (split black lentils)','1 tsp fenugreek seeds','1 tsp salt','Water as needed for batter','4 large potatoes, boiled and mashed','1 large onion, thinly sliced','2 green chillies, chopped','1 tsp mustard seeds','1 tsp turmeric','8–10 curry leaves','2 tbsp oil + oil for cooking dosas','Fresh coriander leaves'], steps:['Soak rice and dal separately for 6 hours; grind to smooth batter.','Ferment batter overnight (8–12 hours) in a warm place.','Sauté mustard seeds, curry leaves, onion; add chillies, turmeric.','Mix in mashed potatoes; season; fold in coriander.','Heat a cast-iron griddle; pour a ladleful of batter.','Spread in concentric circles to form a thin crepe.','Drizzle oil around edges; cook until golden and crispy.','Place potato filling in centre; fold dosa over.','Serve immediately with sambar and coconut chutney.'], category:'Vegetarian', trending:true, ytUrl:'https://www.youtube.com/watch?v=mDqkxZ3UVzc', ytTitle:'Perfect Crispy Masala Dosa – Hebbar\'s Kitchen' },
+      { name:'Dal Makhani', img:'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=600&q=80', desc:'Black lentils slow-cooked overnight with butter and cream — the ultimate comfort dal from Punjab, traditionally simmered on a wood-fire for 24 hours.', origin:'Punjab, India', tags:['Vegetarian','Slow-cooked','Rich'], ingredients:['200g whole black urad lentils (sabut urad)','50g red kidney beans','3 tbsp unsalted butter + extra to finish','2 tbsp oil','1 large onion, finely chopped','1 tbsp garlic-ginger paste','400g canned crushed tomatoes','1 tsp garam masala','1 tsp cumin seeds','1 tsp Kashmiri chilli powder','100ml heavy cream','Salt to taste','Fresh coriander to garnish'], steps:['Soak lentils and kidney beans overnight in cold water.','Pressure cook with salt and water for 20–25 min until soft.','In a heavy pot, heat butter and oil; fry cumin seeds.','Add onion; cook on medium heat until deep golden.','Add garlic-ginger paste; cook 2 min.','Add tomatoes and spices; cook down 15 min.','Add cooked dal; mash some lentils against the pot.','Simmer on very low heat for 1–2 hours, stirring occasionally.','Stir in cream; finish with a generous knob of butter.','Garnish with coriander; serve with naan or rice.'], category:'Vegetarian', trending:false, ytUrl:'https://www.youtube.com/watch?v=ca51e7nMI2g', ytTitle:'Dal Makhani – The Ultimate Dhaba Style Recipe' },
     ]
   },
   {
     id: 'Japanese', flag: '🇯🇵', label: 'Japanese', region: 'Asian',
     tagline: 'Precision, Freshness & Umami', c1: '#bc002d', c2: '#e06c75',
     dishes: [
-      {
-        name:'Salmon Nigiri',
-        img:'https://images.unsplash.com/photo-1559410545-0bdcd187e0a6?w=600&q=80',
-        desc:'Hand-pressed sushi rice topped with silky fresh salmon — a study in simplicity and perfection. The quality of the fish and rice seasoning are everything.',
-        origin:'Tokyo, Japan', tags:['Seafood','Fresh','Classic'],
-        ingredients:[
-          '300g sushi-grade fresh Atlantic salmon',
-          '2 cups Japanese short-grain rice (Koshihikari)',
-          '4 tbsp rice vinegar',
-          '2 tbsp sugar',
-          '1 tsp fine sea salt',
-          'Wasabi paste (real wasabi if possible)',
-          'Soy sauce for dipping',
-          'Pickled ginger (gari) to serve'
-        ],
-        steps:[
-          'Wash rice until water runs clear; cook as per package.',
-          'Dissolve sugar and salt in warm rice vinegar.',
-          'Fold vinegar mixture into hot rice; fan to cool to body temperature.',
-          'Slice salmon at a 45° angle into 5mm slices.',
-          'Wet hands with cold water mixed with a little rice vinegar.',
-          'Shape 20g portions of rice into smooth ovals.',
-          'Dab a tiny amount of wasabi on top of each rice oval.',
-          'Lay salmon slice on top and press gently to adhere.',
-          'Serve immediately with soy sauce and pickled ginger.'
-        ],
-        category:'Seafood', trending:true,
-        ytUrl:'https://www.youtube.com/watch?v=muGWisxoOCw',
-        ytTitle:'How to Make Nigiri Sushi at Home – Peaceful Cuisine'
-      },
-      {
-        name:'Tonkotsu Ramen',
-        img:'https://images.unsplash.com/photo-1569050467447-ce54b3bbc37d?w=600&q=80',
-        desc:'Rich, creamy pork bone broth with springy noodles, chashu pork, and a soft-boiled egg. The broth alone requires 12+ hours of constant boiling to become milky and rich.',
-        origin:'Fukuoka, Japan', tags:['Noodles','Rich','Comfort'],
-        ingredients:[
-          '1.5kg pork trotters + 500g pork neck bones',
-          '3 litres cold water',
-          '4 cloves garlic, crushed',
-          '5cm piece fresh ginger, sliced',
-          '3 green onion stalks',
-          '400g pork belly (for chashu)',
-          '4 tbsp soy sauce + 2 tbsp mirin + 2 tbsp sake (for chashu)',
-          '4 large eggs (for marinated eggs)',
-          '400g fresh or dried ramen noodles',
-          'Bamboo shoots, nori, sesame, green onion to serve',
-          'Tare (seasoning): 4 tbsp soy, 2 tbsp mirin'
-        ],
-        steps:[
-          'Blanch bones in boiling water 10 min; drain and rinse.',
-          'Boil bones in fresh water with garlic, ginger, green onion.',
-          'Maintain a rolling boil for 12+ hours; top up water as needed.',
-          'Roll pork belly tightly; sear then braise in soy, mirin, sake 2 hours.',
-          'Slice chashu into rounds when cool.',
-          'Soft-boil eggs 6.5 min; peel and marinate in soy-mirin mix overnight.',
-          'Strain and season broth with tare.',
-          'Cook noodles per package; drain.',
-          'Assemble: ladle broth, add noodles, top with chashu, egg, bamboo, nori.'
-        ],
-        category:'Classic', trending:true,
-        ytUrl:'https://www.youtube.com/watch?v=jFM_rJ5MtYk',
-        ytTitle:'Tonkotsu Ramen From Scratch – Joshua Weissman'
-      },
-      {
-        name:'Tempura',
-        img:'https://images.unsplash.com/photo-1583623025817-d180a2221d0a?w=600&q=80',
-        desc:'Impossibly light and crispy battered seafood and vegetables. The secret: ice-cold water, minimal mixing, and very hot oil.',
-        origin:'Japan', tags:['Seafood','Fried','Light'],
-        ingredients:[
-          '300g large prawns, peeled and deveined (tails on)',
-          '1 sweet potato, sliced into rounds',
-          '1 aubergine, sliced',
-          '4 shiitake mushrooms',
-          '100g cake flour (or all-purpose)',
-          '1 egg yolk',
-          '200ml ice-cold sparkling water',
-          '1 litre neutral oil for deep frying',
-          'Tentsuyu dipping sauce: 200ml dashi, 4 tbsp soy, 4 tbsp mirin',
-          'Grated daikon to serve'
-        ],
-        steps:[
-          'Make dipping sauce: combine dashi, soy, mirin; heat briefly; cool.',
-          'Chill flour in the freezer 30 min before use.',
-          'Pat prawns and vegetables completely dry.',
-          'Score underside of prawns to prevent curling.',
-          'Heat oil to 180°C.',
-          'Mix egg yolk with ice-cold water; add flour all at once; stir briefly (lumps are essential).',
-          'Dip items in batter; let excess drip off.',
-          'Fry in small batches 2–3 min until very lightly golden.',
-          'Drain on a wire rack, never paper towel (to keep crisp).',
-          'Serve immediately with tentsuyu sauce and grated daikon.'
-        ],
-        category:'Seafood', trending:false,
-        ytUrl:'https://www.youtube.com/watch?v=-tDvoYFnALc',
-        ytTitle:'Perfect Japanese Tempura – Chef John'
-      },
+      { name:'Salmon Nigiri', img:'https://images.unsplash.com/photo-1559410545-0bdcd187e0a6?w=600&q=80', desc:'Hand-pressed sushi rice topped with silky fresh salmon — a study in simplicity and perfection. The quality of the fish and rice seasoning are everything.', origin:'Tokyo, Japan', tags:['Seafood','Fresh','Classic'], ingredients:['300g sushi-grade fresh Atlantic salmon','2 cups Japanese short-grain rice (Koshihikari)','4 tbsp rice vinegar','2 tbsp sugar','1 tsp fine sea salt','Wasabi paste (real wasabi if possible)','Soy sauce for dipping','Pickled ginger (gari) to serve'], steps:['Wash rice until water runs clear; cook as per package.','Dissolve sugar and salt in warm rice vinegar.','Fold vinegar mixture into hot rice; fan to cool to body temperature.','Slice salmon at a 45° angle into 5mm slices.','Wet hands with cold water mixed with a little rice vinegar.','Shape 20g portions of rice into smooth ovals.','Dab a tiny amount of wasabi on top of each rice oval.','Lay salmon slice on top and press gently to adhere.','Serve immediately with soy sauce and pickled ginger.'], category:'Seafood', trending:true, ytUrl:'https://www.youtube.com/watch?v=muGWisxoOCw', ytTitle:'How to Make Nigiri Sushi at Home – Peaceful Cuisine' },
+      { name:'Tonkotsu Ramen', img:'https://images.unsplash.com/photo-1569050467447-ce54b3bbc37d?w=600&q=80', desc:'Rich, creamy pork bone broth with springy noodles, chashu pork, and a soft-boiled egg. The broth alone requires 12+ hours of constant boiling to become milky and rich.', origin:'Fukuoka, Japan', tags:['Noodles','Rich','Comfort'], ingredients:['1.5kg pork trotters + 500g pork neck bones','3 litres cold water','4 cloves garlic, crushed','5cm piece fresh ginger, sliced','3 green onion stalks','400g pork belly (for chashu)','4 tbsp soy sauce + 2 tbsp mirin + 2 tbsp sake (for chashu)','4 large eggs (for marinated eggs)','400g fresh or dried ramen noodles','Bamboo shoots, nori, sesame, green onion to serve','Tare (seasoning): 4 tbsp soy, 2 tbsp mirin'], steps:['Blanch bones in boiling water 10 min; drain and rinse.','Boil bones in fresh water with garlic, ginger, green onion.','Maintain a rolling boil for 12+ hours; top up water as needed.','Roll pork belly tightly; sear then braise in soy, mirin, sake 2 hours.','Slice chashu into rounds when cool.','Soft-boil eggs 6.5 min; peel and marinate in soy-mirin mix overnight.','Strain and season broth with tare.','Cook noodles per package; drain.','Assemble: ladle broth, add noodles, top with chashu, egg, bamboo, nori.'], category:'Classic', trending:true, ytUrl:'https://www.youtube.com/watch?v=jFM_rJ5MtYk', ytTitle:'Tonkotsu Ramen From Scratch – Joshua Weissman' },
+      { name:'Tempura', img:'https://images.unsplash.com/photo-1583623025817-d180a2221d0a?w=600&q=80', desc:'Impossibly light and crispy battered seafood and vegetables. The secret: ice-cold water, minimal mixing, and very hot oil.', origin:'Japan', tags:['Seafood','Fried','Light'], ingredients:['300g large prawns, peeled and deveined (tails on)','1 sweet potato, sliced into rounds','1 aubergine, sliced','4 shiitake mushrooms','100g cake flour (or all-purpose)','1 egg yolk','200ml ice-cold sparkling water','1 litre neutral oil for deep frying','Tentsuyu dipping sauce: 200ml dashi, 4 tbsp soy, 4 tbsp mirin','Grated daikon to serve'], steps:['Make dipping sauce: combine dashi, soy, mirin; heat briefly; cool.','Chill flour in the freezer 30 min before use.','Pat prawns and vegetables completely dry.','Score underside of prawns to prevent curling.','Heat oil to 180°C.','Mix egg yolk with ice-cold water; add flour all at once; stir briefly (lumps are essential).','Dip items in batter; let excess drip off.','Fry in small batches 2–3 min until very lightly golden.','Drain on a wire rack, never paper towel (to keep crisp).','Serve immediately with tentsuyu sauce and grated daikon.'], category:'Seafood', trending:false, ytUrl:'https://www.youtube.com/watch?v=-tDvoYFnALc', ytTitle:'Perfect Japanese Tempura – Chef John' },
     ]
   },
   {
     id: 'Mexican', flag: '🇲🇽', label: 'Mexican', region: 'American',
     tagline: 'Bold, Bright & Festive', c1: '#006847', c2: '#ce1126',
     dishes: [
-      {
-        name:'Tacos al Pastor',
-        img:'https://images.unsplash.com/photo-1613514785940-daed07799d9b?w=600&q=80',
-        desc:'Marinated pork cooked on a vertical spit with pineapple, served in soft corn tortillas. Brought to Mexico by Lebanese immigrants in the 1930s — a glorious fusion.',
-        origin:'Mexico City, Mexico', tags:['Street Food','Pork','Spiced'],
-        ingredients:[
-          '1kg pork shoulder, sliced thin',
-          '3 dried guajillo chillies, soaked and seeds removed',
-          '2 dried ancho chillies, soaked',
-          '3 tbsp achiote paste',
-          '4 cloves garlic',
-          '3 tbsp apple cider vinegar',
-          '1 tsp cumin',
-          '1 tsp dried oregano',
-          '1 tsp black pepper',
-          '200g fresh pineapple, sliced',
-          'Small corn tortillas',
-          'White onion, finely diced',
-          'Fresh cilantro leaves',
-          'Lime wedges and salsa verde'
-        ],
-        steps:[
-          'Blend chillies, achiote, garlic, vinegar, and spices into a smooth paste.',
-          'Coat pork slices thoroughly; marinate overnight.',
-          'Layer pork on vertical skewer or stack in a baking tin with pineapple on top.',
-          'Roast at 200°C for 1.5 hours until edges char.',
-          'Shave meat into small pieces; serve on warmed tortillas.',
-          'Top with shaved pineapple, onion, cilantro, and salsa.'
-        ],
-        category:'Classic', trending:true,
-        ytUrl:'https://www.youtube.com/watch?v=cKGlRHymrCE',
-        ytTitle:'Tacos al Pastor – Authentic Recipe at Home'
-      },
-      {
-        name:'Guacamole',
-        img:'https://images.unsplash.com/photo-1506280754576-f6fa8a873550?w=600&q=80',
-        desc:'Chunky, bright avocado dip with lime, cilantro, and jalapeño — Mexico\'s most famous condiment. Always made fresh; never from a jar.',
-        origin:'Mexico', tags:['Vegetarian','Dip','Fresh'],
-        ingredients:[
-          '3 ripe Hass avocados',
-          'Juice of 2 limes (about 3 tbsp)',
-          '1 jalapeño, deseeded and minced',
-          '½ small white onion, very finely diced',
-          '1 medium tomato, deseeded and diced',
-          'Small bunch fresh cilantro, roughly chopped',
-          '½ tsp fine sea salt (or more to taste)',
-          'Pinch of cumin (optional)'
-        ],
-        steps:[
-          'Halve avocados; remove stones; scoop flesh into a bowl.',
-          'Add lime juice immediately to prevent browning.',
-          'Mash roughly with a fork — keep it chunky.',
-          'Fold in onion, jalapeño, and tomato.',
-          'Season generously with salt.',
-          'Fold in cilantro last.',
-          'Taste and adjust lime and salt.',
-          'Serve immediately with tortilla chips.'
-        ],
-        category:'Vegetarian', trending:false,
-        ytUrl:'https://www.youtube.com/watch?v=a6yCQdx3Pkg&t=328s',
-        ytTitle:'Best Guacamole Ever – Rick Bayless'
-      },
-      {
-        name:'Chicken Burrito',
-        img:'https://images.unsplash.com/photo-1626700051175-6818013e1d4f?w=600&q=80',
-        desc:'Flour tortilla stuffed with seasoned chicken, rice, beans, salsa, and cheese. A Baja California invention that became a global icon.',
-        origin:'Baja California, Mexico', tags:['Filling','Lunch','Crowd-pleaser'],
-        ingredients:[
-          '2 large flour tortillas (30cm)',
-          '400g chicken breast',
-          '1 tsp cumin, 1 tsp paprika, ½ tsp garlic powder',
-          '1 cup cooked Mexican rice (with tomato and cumin)',
-          '1 cup black beans, drained and seasoned',
-          '80g shredded cheddar or Monterey Jack',
-          '4 tbsp sour cream',
-          '4 tbsp fresh tomato salsa',
-          '1 jalapeño, sliced',
-          'Handful shredded romaine lettuce',
-          'Lime juice'
-        ],
-        steps:[
-          'Season chicken; cook in a hot pan with oil until golden.',
-          'Slice chicken; squeeze lime over top.',
-          'Warm tortillas in a dry pan or directly over flame for 15 sec each.',
-          'Spread sour cream in the centre of each tortilla.',
-          'Layer rice, beans, chicken, cheese, salsa, jalapeño, lettuce.',
-          'Fold sides of tortilla in, then roll from the bottom tightly.',
-          'Sear seam-side down in a pan for 1 min to seal.',
-          'Cut diagonally and serve.'
-        ],
-        category:'Classic', trending:true,
-        ytUrl:'https://www.youtube.com/watch?v=sY7ZcIS6Njk',
-        ytTitle:'Perfect Chicken Burrito – Ethan Chlebowski'
-      },
+      { name:'Tacos al Pastor', img:'https://images.unsplash.com/photo-1613514785940-daed07799d9b?w=600&q=80', desc:'Marinated pork cooked on a vertical spit with pineapple, served in soft corn tortillas. Brought to Mexico by Lebanese immigrants in the 1930s — a glorious fusion.', origin:'Mexico City, Mexico', tags:['Street Food','Pork','Spiced'], ingredients:['1kg pork shoulder, sliced thin','3 dried guajillo chillies, soaked and seeds removed','2 dried ancho chillies, soaked','3 tbsp achiote paste','4 cloves garlic','3 tbsp apple cider vinegar','1 tsp cumin','1 tsp dried oregano','1 tsp black pepper','200g fresh pineapple, sliced','Small corn tortillas','White onion, finely diced','Fresh cilantro leaves','Lime wedges and salsa verde'], steps:['Blend chillies, achiote, garlic, vinegar, and spices into a smooth paste.','Coat pork slices thoroughly; marinate overnight.','Layer pork on vertical skewer or stack in a baking tin with pineapple on top.','Roast at 200°C for 1.5 hours until edges char.','Shave meat into small pieces; serve on warmed tortillas.','Top with shaved pineapple, onion, cilantro, and salsa.'], category:'Classic', trending:true, ytUrl:'https://www.youtube.com/watch?v=cKGlRHymrCE', ytTitle:'Tacos al Pastor – Authentic Recipe at Home' },
+      { name:'Guacamole', img:'https://images.unsplash.com/photo-1506280754576-f6fa8a873550?w=600&q=80', desc:'Chunky, bright avocado dip with lime, cilantro, and jalapeño — Mexico\'s most famous condiment. Always made fresh; never from a jar.', origin:'Mexico', tags:['Vegetarian','Dip','Fresh'], ingredients:['3 ripe Hass avocados','Juice of 2 limes (about 3 tbsp)','1 jalapeño, deseeded and minced','½ small white onion, very finely diced','1 medium tomato, deseeded and diced','Small bunch fresh cilantro, roughly chopped','½ tsp fine sea salt (or more to taste)','Pinch of cumin (optional)'], steps:['Halve avocados; remove stones; scoop flesh into a bowl.','Add lime juice immediately to prevent browning.','Mash roughly with a fork — keep it chunky.','Fold in onion, jalapeño, and tomato.','Season generously with salt.','Fold in cilantro last.','Taste and adjust lime and salt.','Serve immediately with tortilla chips.'], category:'Vegetarian', trending:false, ytUrl:'https://www.youtube.com/watch?v=a6yCQdx3Pkg', ytTitle:'Best Guacamole Ever – Rick Bayless' },
+      { name:'Chicken Burrito', img:'https://images.unsplash.com/photo-1626700051175-6818013e1d4f?w=600&q=80', desc:'Flour tortilla stuffed with seasoned chicken, rice, beans, salsa, and cheese. A Baja California invention that became a global icon.', origin:'Baja California, Mexico', tags:['Filling','Lunch','Crowd-pleaser'], ingredients:['2 large flour tortillas (30cm)','400g chicken breast','1 tsp cumin, 1 tsp paprika, ½ tsp garlic powder','1 cup cooked Mexican rice (with tomato and cumin)','1 cup black beans, drained and seasoned','80g shredded cheddar or Monterey Jack','4 tbsp sour cream','4 tbsp fresh tomato salsa','1 jalapeño, sliced','Handful shredded romaine lettuce','Lime juice'], steps:['Season chicken; cook in a hot pan with oil until golden.','Slice chicken; squeeze lime over top.','Warm tortillas in a dry pan or directly over flame for 15 sec each.','Spread sour cream in the centre of each tortilla.','Layer rice, beans, chicken, cheese, salsa, jalapeño, lettuce.','Fold sides of tortilla in, then roll from the bottom tightly.','Sear seam-side down in a pan for 1 min to seal.','Cut diagonally and serve.'], category:'Classic', trending:true, ytUrl:'https://www.youtube.com/watch?v=sY7ZcIS6Njk', ytTitle:'Perfect Chicken Burrito – Ethan Chlebowski' },
     ]
   },
   {
     id: 'Chinese', flag: '🇨🇳', label: 'Chinese', region: 'Asian',
     tagline: 'Ancient Techniques, Bold Flavours', c1: '#de2910', c2: '#ffde00',
     dishes: [
-      {
-        name:'Xiao Long Bao',
-        img:'https://images.unsplash.com/photo-1563245372-f21724e3856d?w=600&q=80',
-        desc:'Delicate soup dumplings filled with pork and hot broth — Shanghai\'s most beloved bite. The magic lies in the aspic that melts into soup inside the dumpling as it steams.',
-        origin:'Shanghai, China', tags:['Dumplings','Steamed','Iconic'],
-        ingredients:[
-          '300g plain flour + extra for dusting',
-          '150ml just-boiled water',
-          '400g pork mince (20% fat)',
-          '2 tbsp soy sauce',
-          '1 tbsp Shaoxing rice wine',
-          '1 tbsp sesame oil',
-          '2 tsp ginger, finely minced',
-          '2 green onions, minced',
-          '1 tsp white pepper',
-          '250ml pork bone stock (for aspic)',
-          '5g gelatin (to set aspic)',
-          'Cabbage leaves for steamer',
-          'Black vinegar + shredded ginger to serve'
-        ],
-        steps:[
-          'Make aspic: heat stock, dissolve gelatin, pour into tray, refrigerate until firm.',
-          'Pour boiling water into flour; mix then knead until smooth; rest 30 min.',
-          'Dice aspic into small cubes; mix into pork with soy, wine, sesame oil, ginger, onion.',
-          'Roll dough into 2mm wrappers, 8–9cm in diameter.',
-          'Place 1 tsp filling in centre; pleat with at least 16 folds.',
-          'Place on cabbage-lined bamboo steamer.',
-          'Steam vigorously 7–8 minutes.',
-          'Transfer carefully to plate; eat by biting a tiny hole to sip broth first.'
-        ],
-        category:'Classic', trending:true,
-        ytUrl:'https://www.youtube.com/watch?v=UB1FC4Nim1Y',
-        ytTitle:'Xiao Long Bao (Soup Dumplings) from Scratch – Made With Lau'
-      },
-      {
-        name:'Kung Pao Chicken',
-        img:'https://images.unsplash.com/photo-1525755662778-989d0524087e?w=600&q=80',
-        desc:'Stir-fried chicken with peanuts, dried chillies, and Sichuan peppercorns in a tangy-sweet sauce. A Sichuan classic with a numbing, tingling heat like no other dish.',
-        origin:'Sichuan, China', tags:['Spicy','Stir-fry','Nutty'],
-        ingredients:[
-          '500g boneless chicken thighs, diced',
-          '1 tbsp soy sauce + 1 tsp cornstarch (marinade)',
-          '80g roasted peanuts',
-          '8–10 dried red chillies (Sichuan variety)',
-          '1 tsp whole Sichuan peppercorns',
-          '4 cloves garlic, minced',
-          '2cm ginger, minced',
-          '4 green onions, cut into pieces',
-          'Sauce: 2 tbsp soy, 1 tbsp dark soy, 2 tbsp Chinese black vinegar, 1 tbsp sugar, 2 tsp cornstarch, 3 tbsp water',
-          '3 tbsp neutral oil'
-        ],
-        steps:[
-          'Marinate chicken in soy and cornstarch for 15 min.',
-          'Mix all sauce ingredients in a bowl; set aside.',
-          'Heat wok until smoking; add oil.',
-          'Fry dried chillies and Sichuan peppercorns until fragrant but not burnt.',
-          'Add chicken; stir-fry on high heat until cooked through.',
-          'Push chicken aside; fry garlic and ginger briefly.',
-          'Pour sauce in; toss everything together.',
-          'Add green onions and peanuts; toss.',
-          'Serve immediately over steamed rice.'
-        ],
-        category:'Classic', trending:false,
-        ytUrl:'https://www.youtube.com/watch?v=kIqQktFfB1M',
-        ytTitle:'Kung Pao Chicken – Woks of Life Authentic Recipe'
-      },
-      {
-        name:'Dim Sum Har Gow',
-        img:'https://images.unsplash.com/photo-1496116218417-1a781b1c416c?w=600&q=80',
-        desc:'Translucent shrimp dumplings with a paper-thin skin — the benchmark of a great dim sum house. A skilled chef\'s har gow should have exactly 7 pleats.',
-        origin:'Guangdong, China', tags:['Seafood','Steamed','Delicate'],
-        ingredients:[
-          '150g wheat starch (not regular flour)',
-          '50g tapioca starch',
-          '220ml boiling water',
-          '1 tsp sesame oil',
-          '300g fresh prawns, roughly chopped',
-          '80g bamboo shoots, finely minced',
-          '1 tbsp soy sauce',
-          '1 tsp sesame oil',
-          '½ tsp white pepper',
-          '½ tsp sugar',
-          '1 tbsp cornstarch',
-          'Cabbage leaves for steamer'
-        ],
-        steps:[
-          'Mix wheat and tapioca starch; pour in boiling water.',
-          'Mix quickly; knead with sesame oil into a smooth, pliable dough.',
-          'Keep covered with a damp cloth at all times.',
-          'Mix shrimp with bamboo shoots, soy, sesame oil, pepper, sugar, cornstarch.',
-          'Roll dough into a log; slice into 12g pieces.',
-          'Flatten each piece with oiled cleaver into 8cm rounds.',
-          'Place 1 tsp filling slightly off-centre; pleat 7 times.',
-          'Steam on cabbage-lined steamer 6–7 min.',
-          'Serve immediately with chilli oil and soy sauce.'
-        ],
-        category:'Seafood', trending:true,
-        ytUrl:'https://www.youtube.com/watch?v=thqA0LI4rUc',
-        ytTitle:'Har Gow Shrimp Dumplings – Daddy Lau'
-      },
+      { name:'Xiao Long Bao', img:'https://images.unsplash.com/photo-1563245372-f21724e3856d?w=600&q=80', desc:'Delicate soup dumplings filled with pork and hot broth — Shanghai\'s most beloved bite. The magic lies in the aspic that melts into soup inside the dumpling as it steams.', origin:'Shanghai, China', tags:['Dumplings','Steamed','Iconic'], ingredients:['300g plain flour + extra for dusting','150ml just-boiled water','400g pork mince (20% fat)','2 tbsp soy sauce','1 tbsp Shaoxing rice wine','1 tbsp sesame oil','2 tsp ginger, finely minced','2 green onions, minced','1 tsp white pepper','250ml pork bone stock (for aspic)','5g gelatin (to set aspic)','Cabbage leaves for steamer','Black vinegar + shredded ginger to serve'], steps:['Make aspic: heat stock, dissolve gelatin, pour into tray, refrigerate until firm.','Pour boiling water into flour; mix then knead until smooth; rest 30 min.','Dice aspic into small cubes; mix into pork with soy, wine, sesame oil, ginger, onion.','Roll dough into 2mm wrappers, 8–9cm in diameter.','Place 1 tsp filling in centre; pleat with at least 16 folds.','Place on cabbage-lined bamboo steamer.','Steam vigorously 7–8 minutes.','Transfer carefully to plate; eat by biting a tiny hole to sip broth first.'], category:'Classic', trending:true, ytUrl:'https://www.youtube.com/watch?v=UB1FC4Nim1Y', ytTitle:'Xiao Long Bao (Soup Dumplings) from Scratch – Made With Lau' },
+      { name:'Kung Pao Chicken', img:'https://images.unsplash.com/photo-1525755662778-989d0524087e?w=600&q=80', desc:'Stir-fried chicken with peanuts, dried chillies, and Sichuan peppercorns in a tangy-sweet sauce. A Sichuan classic with a numbing, tingling heat like no other dish.', origin:'Sichuan, China', tags:['Spicy','Stir-fry','Nutty'], ingredients:['500g boneless chicken thighs, diced','1 tbsp soy sauce + 1 tsp cornstarch (marinade)','80g roasted peanuts','8–10 dried red chillies (Sichuan variety)','1 tsp whole Sichuan peppercorns','4 cloves garlic, minced','2cm ginger, minced','4 green onions, cut into pieces','Sauce: 2 tbsp soy, 1 tbsp dark soy, 2 tbsp Chinese black vinegar, 1 tbsp sugar, 2 tsp cornstarch, 3 tbsp water','3 tbsp neutral oil'], steps:['Marinate chicken in soy and cornstarch for 15 min.','Mix all sauce ingredients in a bowl; set aside.','Heat wok until smoking; add oil.','Fry dried chillies and Sichuan peppercorns until fragrant but not burnt.','Add chicken; stir-fry on high heat until cooked through.','Push chicken aside; fry garlic and ginger briefly.','Pour sauce in; toss everything together.','Add green onions and peanuts; toss.','Serve immediately over steamed rice.'], category:'Classic', trending:false, ytUrl:'https://www.youtube.com/watch?v=kIqQktFfB1M', ytTitle:'Kung Pao Chicken – Woks of Life Authentic Recipe' },
+      { name:'Dim Sum Har Gow', img:'https://images.unsplash.com/photo-1496116218417-1a781b1c416c?w=600&q=80', desc:'Translucent shrimp dumplings with a paper-thin skin — the benchmark of a great dim sum house. A skilled chef\'s har gow should have exactly 7 pleats.', origin:'Guangdong, China', tags:['Seafood','Steamed','Delicate'], ingredients:['150g wheat starch (not regular flour)','50g tapioca starch','220ml boiling water','1 tsp sesame oil','300g fresh prawns, roughly chopped','80g bamboo shoots, finely minced','1 tbsp soy sauce','1 tsp sesame oil','½ tsp white pepper','½ tsp sugar','1 tbsp cornstarch','Cabbage leaves for steamer'], steps:['Mix wheat and tapioca starch; pour in boiling water.','Mix quickly; knead with sesame oil into a smooth, pliable dough.','Keep covered with a damp cloth at all times.','Mix shrimp with bamboo shoots, soy, sesame oil, pepper, sugar, cornstarch.','Roll dough into a log; slice into 12g pieces.','Flatten each piece with oiled cleaver into 8cm rounds.','Place 1 tsp filling slightly off-centre; pleat 7 times.','Steam on cabbage-lined steamer 6–7 min.','Serve immediately with chilli oil and soy sauce.'], category:'Seafood', trending:true, ytUrl:'https://www.youtube.com/watch?v=thqA0LI4rUc', ytTitle:'Har Gow Shrimp Dumplings – Daddy Lau' },
     ]
   },
   {
     id: 'French', flag: '🇫🇷', label: 'French', region: 'European',
     tagline: 'Elegance on Every Plate', c1: '#002395', c2: '#ed2939',
     dishes: [
-      {
-        name:'Croissant',
-        img:'https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=600&q=80',
-        desc:'Buttery, flaky, laminated pastry — the Parisian morning ritual. True croissants require three days and 27 layers of butter to achieve their signature honeycombed interior.',
-        origin:'Paris, France', tags:['Pastry','Breakfast','Buttery'],
-        ingredients:[
-          '500g strong bread flour',
-          '10g fine sea salt',
-          '80g caster sugar',
-          '10g instant yeast',
-          '300ml cold whole milk',
-          '30g unsalted butter (for dough)',
-          '250g cold European-style unsalted butter (for lamination, 84% fat)',
-          '1 egg yolk + 1 tbsp milk (egg wash)'
-        ],
-        steps:[
-          'Mix flour, salt, sugar, yeast; add milk and 30g butter.',
-          'Knead briefly; do not over-develop. Flatten into square; refrigerate overnight.',
-          'Day 2: Beat cold butter into a 20cm square sheet; keep fridge-cold.',
-          'Encase butter block in dough; roll to 60x20cm.',
-          'Fold in thirds (letter fold); refrigerate 30 min. Repeat twice.',
-          'Day 3: Roll to 4mm; cut triangles and roll from wide end.',
-          'Proof at room temperature 2–3 hours until wobbly.',
-          'Brush with egg wash; bake at 190°C for 18–20 min until deep amber.'
-        ],
-        category:'Vegetarian', trending:true,
-        ytUrl:'https://www.youtube.com/watch?v=djnNkLi_K6E',
-        ytTitle:'Homemade Croissants – Claire Saffitz'
-      },
-      {
-        name:'French Onion Soup',
-        img:'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=600&q=80',
-        desc:'Deeply caramelised onions in rich beef broth under a golden Gruyère crouton — Lyon\'s gift to the world. The patience required to properly caramelise the onions is the whole secret.',
-        origin:'Lyon, France', tags:['Soup','Warming','Classic'],
-        ingredients:[
-          '1.5kg yellow onions, thinly sliced',
-          '60g unsalted butter',
-          '2 tbsp olive oil',
-          '1 tsp sugar',
-          '200ml dry white wine',
-          '100ml dry sherry or cognac',
-          '1.5 litres good beef stock',
-          '1 tbsp fresh thyme leaves',
-          '1 bay leaf',
-          '1 baguette, sliced and toasted',
-          '200g Gruyère cheese, coarsely grated',
-          'Salt and freshly cracked black pepper'
-        ],
-        steps:[
-          'Melt butter with oil in a heavy pot over medium heat.',
-          'Add onions and sugar; cook stirring occasionally for 45–60 min until deeply golden.',
-          'Deglaze with wine and sherry; scrape up all brown bits.',
-          'Add stock, thyme, bay leaf; simmer 20–30 min.',
-          'Season well; remove bay leaf.',
-          'Ladle into oven-proof bowls.',
-          'Float 2 toasted baguette slices on top of each.',
-          'Pile generously with Gruyère.',
-          'Grill under broiler until bubbling and golden brown.'
-        ],
-        category:'Classic', trending:false,
-        ytUrl:'https://www.youtube.com/watch?v=1qRir364aNk',
-        ytTitle:'French Onion Soup – Jacques Pépin'
-      },
-      {
-        name:'Coq au Vin',
-        img:'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&q=80',
-        desc:'Chicken braised in burgundy wine with mushrooms, pearl onions, and lardons. Julia Child introduced this rustic Burgundian classic to American home cooks in the 1960s.',
-        origin:'Burgundy, France', tags:['Braised','Wine','Rustic'],
-        ingredients:[
-          '1 whole chicken, jointed into 8 pieces',
-          '750ml Burgundy or full-bodied red wine',
-          '200g lardons (thick-cut bacon cubes)',
-          '250g cremini mushrooms, quartered',
-          '200g pearl onions, peeled',
-          '4 cloves garlic, crushed',
-          '2 tbsp tomato paste',
-          '300ml chicken stock',
-          '2 sprigs fresh thyme + 1 bay leaf',
-          '2 tbsp flour',
-          '3 tbsp unsalted butter',
-          'Flat-leaf parsley to serve'
-        ],
-        steps:[
-          'Marinate chicken in wine with thyme and bay overnight.',
-          'Remove chicken; pat dry; reserve marinade.',
-          'Brown lardons in a Dutch oven; set aside.',
-          'Brown chicken pieces all over in the same fat; set aside.',
-          'Sauté pearl onions and mushrooms until golden.',
-          'Add garlic and tomato paste; cook 1 min.',
-          'Dust with flour; stir; pour in reserved wine marinade and stock.',
-          'Return chicken and lardons; bring to gentle simmer.',
-          'Cover; braise 45 minutes on low heat.',
-          'Remove chicken; reduce sauce if needed; swirl in butter.'
-        ],
-        category:'Classic', trending:true,
-        ytUrl:'https://www.youtube.com/watch?v=hJswLfXL_GA',
-        ytTitle:'Coq au Vin – Julia Child\'s Classic Recipe'
-      },
+      { name:'Croissant', img:'https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=600&q=80', desc:'Buttery, flaky, laminated pastry — the Parisian morning ritual. True croissants require three days and 27 layers of butter to achieve their signature honeycombed interior.', origin:'Paris, France', tags:['Pastry','Breakfast','Buttery'], ingredients:['500g strong bread flour','10g fine sea salt','80g caster sugar','10g instant yeast','300ml cold whole milk','30g unsalted butter (for dough)','250g cold European-style unsalted butter (for lamination, 84% fat)','1 egg yolk + 1 tbsp milk (egg wash)'], steps:['Mix flour, salt, sugar, yeast; add milk and 30g butter.','Knead briefly; do not over-develop. Flatten into square; refrigerate overnight.','Day 2: Beat cold butter into a 20cm square sheet; keep fridge-cold.','Encase butter block in dough; roll to 60x20cm.','Fold in thirds (letter fold); refrigerate 30 min. Repeat twice.','Day 3: Roll to 4mm; cut triangles and roll from wide end.','Proof at room temperature 2–3 hours until wobbly.','Brush with egg wash; bake at 190°C for 18–20 min until deep amber.'], category:'Vegetarian', trending:true, ytUrl:'https://www.youtube.com/watch?v=djnNkLi_K6E', ytTitle:'Homemade Croissants – Claire Saffitz' },
+      { name:'French Onion Soup', img:'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=600&q=80', desc:'Deeply caramelised onions in rich beef broth under a golden Gruyère crouton — Lyon\'s gift to the world. The patience required to properly caramelise the onions is the whole secret.', origin:'Lyon, France', tags:['Soup','Warming','Classic'], ingredients:['1.5kg yellow onions, thinly sliced','60g unsalted butter','2 tbsp olive oil','1 tsp sugar','200ml dry white wine','100ml dry sherry or cognac','1.5 litres good beef stock','1 tbsp fresh thyme leaves','1 bay leaf','1 baguette, sliced and toasted','200g Gruyère cheese, coarsely grated','Salt and freshly cracked black pepper'], steps:['Melt butter with oil in a heavy pot over medium heat.','Add onions and sugar; cook stirring occasionally for 45–60 min until deeply golden.','Deglaze with wine and sherry; scrape up all brown bits.','Add stock, thyme, bay leaf; simmer 20–30 min.','Season well; remove bay leaf.','Ladle into oven-proof bowls.','Float 2 toasted baguette slices on top of each.','Pile generously with Gruyère.','Grill under broiler until bubbling and golden brown.'], category:'Classic', trending:false, ytUrl:'https://www.youtube.com/watch?v=1qRir364aNk', ytTitle:'French Onion Soup – Jacques Pépin' },
+      { name:'Coq au Vin', img:'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&q=80', desc:'Chicken braised in burgundy wine with mushrooms, pearl onions, and lardons. Julia Child introduced this rustic Burgundian classic to American home cooks in the 1960s.', origin:'Burgundy, France', tags:['Braised','Wine','Rustic'], ingredients:['1 whole chicken, jointed into 8 pieces','750ml Burgundy or full-bodied red wine','200g lardons (thick-cut bacon cubes)','250g cremini mushrooms, quartered','200g pearl onions, peeled','4 cloves garlic, crushed','2 tbsp tomato paste','300ml chicken stock','2 sprigs fresh thyme + 1 bay leaf','2 tbsp flour','3 tbsp unsalted butter','Flat-leaf parsley to serve'], steps:['Marinate chicken in wine with thyme and bay overnight.','Remove chicken; pat dry; reserve marinade.','Brown lardons in a Dutch oven; set aside.','Brown chicken pieces all over in the same fat; set aside.','Sauté pearl onions and mushrooms until golden.','Add garlic and tomato paste; cook 1 min.','Dust with flour; stir; pour in reserved wine marinade and stock.','Return chicken and lardons; bring to gentle simmer.','Cover; braise 45 minutes on low heat.','Remove chicken; reduce sauce if needed; swirl in butter.'], category:'Classic', trending:true, ytUrl:'https://www.youtube.com/watch?v=hJswLfXL_GA', ytTitle:'Coq au Vin – Julia Child\'s Classic Recipe' },
     ]
   },
   {
     id: 'Thai', flag: '🇹🇭', label: 'Thai', region: 'Asian',
     tagline: 'Sweet, Sour, Salty, Spicy — All at Once', c1: '#a51931', c2: '#f5c518',
     dishes: [
-      {
-        name:'Pad Thai',
-        img:'https://images.unsplash.com/photo-1559314809-0d155014e29e?w=600&q=80',
-        desc:'Stir-fried rice noodles with tamarind, egg, bean sprouts, and peanuts — Thailand\'s most famous export, developed as a national dish in the 1930s to promote rice noodle consumption.',
-        origin:'Bangkok, Thailand', tags:['Noodles','Street Food','Tangy'],
-        ingredients:[
-          '250g dried sen lek rice noodles (3mm wide)',
-          '200g prawns or firm tofu, or chicken strips',
-          '2 eggs',
-          '100g fresh bean sprouts',
-          '4 green onions, cut into 2cm pieces',
-          '60g roasted peanuts, crushed',
-          '3 tbsp tamarind paste (from a block)',
-          '3 tbsp fish sauce',
-          '2 tbsp palm sugar or brown sugar',
-          '2 tbsp neutral oil',
-          '3 cloves garlic, minced',
-          '2 shallots, minced',
-          'Lime wedges, dried chilli flakes, extra peanuts to serve'
-        ],
-        steps:[
-          'Soak noodles in warm water 20–30 min until pliable; drain.',
-          'Mix tamarind, fish sauce, and sugar into sauce; taste for balance.',
-          'Heat wok over high heat until smoking; add oil.',
-          'Fry garlic and shallots 30 seconds.',
-          'Add protein; cook until nearly done.',
-          'Push to side; add noodles and sauce; toss.',
-          'Push to side; crack eggs; scramble briefly, then fold in.',
-          'Add bean sprouts and green onions; toss quickly.',
-          'Serve topped with peanuts, lime, and chilli flakes.'
-        ],
-        category:'Classic', trending:true,
-        ytUrl:'https://www.youtube.com/watch?v=GNhF2DSY4lE',
-        ytTitle:'Authentic Pad Thai – Pailin\'s Kitchen'
-      },
-      {
-        name:'Tom Kha Gai',
-        img:'https://images.unsplash.com/photo-1548943487-a2e4e43b4853?w=600&q=80',
-        desc:'Coconut chicken soup fragrant with galangal, lemongrass, and lime leaves — simultaneously a broth, a curry, and pure aromatic bliss.',
-        origin:'Thailand', tags:['Soup','Coconut','Aromatic'],
-        ingredients:[
-          '400ml full-fat coconut milk',
-          '200ml chicken stock',
-          '300g chicken breast, thinly sliced',
-          '100g oyster mushrooms',
-          '3 stalks lemongrass, bruised and cut',
-          '5 slices fresh galangal',
-          '5 kaffir lime leaves, torn',
-          '3 tbsp fish sauce',
-          'Juice of 1–2 limes',
-          '1 tbsp palm sugar',
-          '3 bird\'s eye chillies, bruised',
-          'Fresh cilantro and sliced chilli to serve'
-        ],
-        steps:[
-          'Bring coconut milk and stock to a gentle simmer.',
-          'Add galangal, lemongrass, lime leaves, and chillies.',
-          'Infuse 5 minutes on low heat.',
-          'Add chicken and mushrooms; cook 8–10 min.',
-          'Season with fish sauce, lime juice, and palm sugar.',
-          'Balance sour, salty, sweet — this is key.',
-          'Ladle into bowls; garnish with cilantro and fresh chilli.'
-        ],
-        category:'Classic', trending:false,
-        ytUrl:'https://www.youtube.com/watch?v=AYmsgQ-L_Tc',
-        ytTitle:'Tom Kha Gai – Hot Thai Kitchen'
-      },
-      {
-        name:'Thai Green Curry',
-        img:'https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?w=600&q=80',
-        desc:'Fragrant green curry paste cooked with coconut milk — the most aromatic of Thai curries, with its heat coming from fresh green chillies rather than dried.',
-        origin:'Central Thailand', tags:['Spicy','Coconut','Aromatic'],
-        ingredients:[
-          '400ml full-fat coconut milk',
-          '3–4 tbsp green curry paste (store-bought or homemade)',
-          '400g prawns or chicken thigh',
-          '150g Thai aubergines, quartered',
-          '100g baby spinach or Thai basil',
-          '5 kaffir lime leaves, torn',
-          '2 tbsp fish sauce',
-          '1 tbsp palm sugar',
-          '1 tbsp coconut oil or neutral oil',
-          'Jasmine rice to serve',
-          'Red chilli and basil to garnish'
-        ],
-        steps:[
-          'Heat oil in a wok; fry curry paste 2 min until fragrant.',
-          'Pour in thick top of coconut milk; stir until it splits and oil surfaces.',
-          'Add remaining coconut milk; bring to simmer.',
-          'Add protein and aubergines; cook 8–10 min.',
-          'Season with fish sauce and palm sugar.',
-          'Add kaffir lime leaves and basil; stir.',
-          'Taste — should be rich, fragrant, mildly spicy.',
-          'Serve over jasmine rice; garnish with chilli and basil.'
-        ],
-        category:'Seafood', trending:true,
-        ytUrl:'https://www.youtube.com/watch?v=wno_qUB02lM',
-        ytTitle:'Thai Green Curry – Pailin\'s Kitchen'
-      },
+      { name:'Pad Thai', img:'https://images.unsplash.com/photo-1559314809-0d155014e29e?w=600&q=80', desc:'Stir-fried rice noodles with tamarind, egg, bean sprouts, and peanuts — Thailand\'s most famous export, developed as a national dish in the 1930s to promote rice noodle consumption.', origin:'Bangkok, Thailand', tags:['Noodles','Street Food','Tangy'], ingredients:['250g dried sen lek rice noodles (3mm wide)','200g prawns or firm tofu, or chicken strips','2 eggs','100g fresh bean sprouts','4 green onions, cut into 2cm pieces','60g roasted peanuts, crushed','3 tbsp tamarind paste (from a block)','3 tbsp fish sauce','2 tbsp palm sugar or brown sugar','2 tbsp neutral oil','3 cloves garlic, minced','2 shallots, minced','Lime wedges, dried chilli flakes, extra peanuts to serve'], steps:['Soak noodles in warm water 20–30 min until pliable; drain.','Mix tamarind, fish sauce, and sugar into sauce; taste for balance.','Heat wok over high heat until smoking; add oil.','Fry garlic and shallots 30 seconds.','Add protein; cook until nearly done.','Push to side; add noodles and sauce; toss.','Push to side; crack eggs; scramble briefly, then fold in.','Add bean sprouts and green onions; toss quickly.','Serve topped with peanuts, lime, and chilli flakes.'], category:'Classic', trending:true, ytUrl:'https://www.youtube.com/watch?v=GNhF2DSY4lE', ytTitle:'Authentic Pad Thai – Pailin\'s Kitchen' },
+      { name:'Tom Kha Gai', img:'https://images.unsplash.com/photo-1548943487-a2e4e43b4853?w=600&q=80', desc:'Coconut chicken soup fragrant with galangal, lemongrass, and lime leaves — simultaneously a broth, a curry, and pure aromatic bliss.', origin:'Thailand', tags:['Soup','Coconut','Aromatic'], ingredients:['400ml full-fat coconut milk','200ml chicken stock','300g chicken breast, thinly sliced','100g oyster mushrooms','3 stalks lemongrass, bruised and cut','5 slices fresh galangal','5 kaffir lime leaves, torn','3 tbsp fish sauce','Juice of 1–2 limes','1 tbsp palm sugar','3 bird\'s eye chillies, bruised','Fresh cilantro and sliced chilli to serve'], steps:['Bring coconut milk and stock to a gentle simmer.','Add galangal, lemongrass, lime leaves, and chillies.','Infuse 5 minutes on low heat.','Add chicken and mushrooms; cook 8–10 min.','Season with fish sauce, lime juice, and palm sugar.','Balance sour, salty, sweet — this is key.','Ladle into bowls; garnish with cilantro and fresh chilli.'], category:'Classic', trending:false, ytUrl:'https://www.youtube.com/watch?v=AYmsgQ-L_Tc', ytTitle:'Tom Kha Gai – Hot Thai Kitchen' },
+      { name:'Thai Green Curry', img:'https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?w=600&q=80', desc:'Fragrant green curry paste cooked with coconut milk — the most aromatic of Thai curries, with its heat coming from fresh green chillies rather than dried.', origin:'Central Thailand', tags:['Spicy','Coconut','Aromatic'], ingredients:['400ml full-fat coconut milk','3–4 tbsp green curry paste (store-bought or homemade)','400g prawns or chicken thigh','150g Thai aubergines, quartered','100g baby spinach or Thai basil','5 kaffir lime leaves, torn','2 tbsp fish sauce','1 tbsp palm sugar','1 tbsp coconut oil or neutral oil','Jasmine rice to serve','Red chilli and basil to garnish'], steps:['Heat oil in a wok; fry curry paste 2 min until fragrant.','Pour in thick top of coconut milk; stir until it splits and oil surfaces.','Add remaining coconut milk; bring to simmer.','Add protein and aubergines; cook 8–10 min.','Season with fish sauce and palm sugar.','Add kaffir lime leaves and basil; stir.','Taste — should be rich, fragrant, mildly spicy.','Serve over jasmine rice; garnish with chilli and basil.'], category:'Seafood', trending:true, ytUrl:'https://www.youtube.com/watch?v=wno_qUB02lM', ytTitle:'Thai Green Curry – Pailin\'s Kitchen' },
     ]
   },
   {
     id: 'American', flag: '🇺🇸', label: 'American', region: 'American',
     tagline: 'Big, Bold & Iconic', c1: '#3c3b6e', c2: '#b22234',
     dishes: [
-      {
-        name:'Classic Smash Burger',
-        img:'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&q=80',
-        desc:'Two smashed patties with caramelised crust, American cheese, pickles, and special sauce on a brioche bun. Smashing creates maximum Maillard surface area — that\'s the science of flavour.',
-        origin:'USA', tags:['Beef','Grilled','Iconic'],
-        ingredients:[
-          '450g ground beef (80/20 fat ratio), divided into 4 × 110g balls',
-          '4 slices American cheese',
-          '2 brioche burger buns, lightly toasted',
-          '10 dill pickle slices',
-          'Special sauce: 3 tbsp mayo, 1 tbsp ketchup, 1 tbsp yellow mustard, 1 tsp pickle brine, ½ tsp garlic powder',
-          'Shredded iceberg lettuce',
-          'Salt and black pepper',
-          'Neutral oil for pan'
-        ],
-        steps:[
-          'Mix special sauce ingredients; refrigerate.',
-          'Heat cast-iron skillet until smoking hot.',
-          'Place 2 beef balls in pan; smash flat with a heavy spatula (110g becomes ~10cm patty).',
-          'Season immediately with salt and pepper.',
-          'Cook 2 min — a deep crust will form; do not touch.',
-          'Flip once; lay cheese on each patty immediately.',
-          'Stack double patties; steam 30 sec.',
-          'Toast buns cut-side down in same pan.',
-          'Build: sauce, lettuce, pickles, double patty, top bun.',
-        ],
-        category:'Classic', trending:true,
-        ytUrl:'https://www.youtube.com/watch?v=foD42-73wdI',
-        ytTitle:'The Perfect Smash Burger – Guga Foods'
-      },
-      {
-        name:'BBQ Ribs',
-        img:'https://images.unsplash.com/photo-1544025162-d76694265947?w=600&q=80',
-        desc:'Slow-smoked pork ribs glazed with tangy-sweet BBQ sauce — the crown jewel of American BBQ. The 3-2-1 method gives consistently perfect ribs every time.',
-        origin:'Kansas City, USA', tags:['Smoked','Pork','BBQ'],
-        ingredients:[
-          '2 racks pork baby back ribs (about 1.5kg each)',
-          'Dry rub: 3 tbsp brown sugar, 2 tbsp paprika, 1 tbsp garlic powder, 1 tbsp onion powder, 1 tsp black pepper, 1 tsp salt, ½ tsp cayenne',
-          '4 tbsp yellow mustard (as binder)',
-          '100ml apple cider vinegar + water spray',
-          '250ml Kansas City-style BBQ sauce (or homemade)',
-          '2 tbsp apple cider vinegar (for sauce)',
-          'Wood chunks: hickory or cherry'
-        ],
-        steps:[
-          'Remove membrane from back of ribs using a paper towel grip.',
-          'Coat all sides with yellow mustard as a binder.',
-          'Apply dry rub generously; pat into surface. Rest 1 hour.',
-          'Heat smoker to 107°C (225°F) with hickory wood.',
-          'Smoke uncovered 3 hours — this is the smoke phase.',
-          'Wrap tightly in foil with a splash of apple cider vinegar; smoke 2 more hours.',
-          'Unwrap; brush generously with BBQ sauce.',
-          'Smoke uncovered 1 final hour to set the glaze.',
-          'Rest 10 minutes before slicing between bones.'
-        ],
-        category:'Classic', trending:false,
-        ytUrl:'https://www.youtube.com/watch?v=tFHBpCQ_yuE',
-        ytTitle:'Perfect 3-2-1 BBQ Ribs – Malcolm Reed'
-      },
-      {
-        name:'Buttermilk Pancakes',
-        img:'https://images.unsplash.com/photo-1565299543923-37dd37887442?w=600&q=80',
-        desc:'Thick, fluffy stacks of buttermilk pancakes drizzled with maple syrup — the quintessential American Sunday breakfast. The acid in buttermilk reacts with baking soda to create maximum fluff.',
-        origin:'USA', tags:['Breakfast','Sweet','Vegetarian'],
-        ingredients:[
-          '240g all-purpose flour',
-          '2 tbsp sugar',
-          '1 tsp baking powder',
-          '½ tsp baking soda',
-          '½ tsp fine salt',
-          '360ml cold buttermilk',
-          '2 large eggs',
-          '3 tbsp unsalted butter, melted (+ extra for pan)',
-          '1 tsp vanilla extract',
-          'Pure maple syrup to serve',
-          'Fresh blueberries (optional)'
-        ],
-        steps:[
-          'Whisk all dry ingredients together in a large bowl.',
-          'In another bowl, whisk buttermilk, eggs, melted butter, and vanilla.',
-          'Pour wet into dry; stir until just combined — lumps are essential.',
-          'Let batter rest 5 minutes.',
-          'Heat a non-stick pan or griddle over medium; butter lightly.',
-          'Pour ¼ cup batter per pancake; do not spread.',
-          'Cook until bubbles form and edges look dry, about 2–3 min.',
-          'Flip once; cook 1–2 min more until golden.',
-          'Keep warm in oven at 90°C; serve in stacks with maple syrup.'
-        ],
-        category:'Vegetarian', trending:true,
-        ytUrl:'https://www.youtube.com/watch?v=9zCVCL4V8JQ',
-        ytTitle:'Fluffy Buttermilk Pancakes – Binging with Babish'
-      },
+      { name:'Classic Smash Burger', img:'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&q=80', desc:'Two smashed patties with caramelised crust, American cheese, pickles, and special sauce on a brioche bun. Smashing creates maximum Maillard surface area — that\'s the science of flavour.', origin:'USA', tags:['Beef','Grilled','Iconic'], ingredients:['450g ground beef (80/20 fat ratio), divided into 4 × 110g balls','4 slices American cheese','2 brioche burger buns, lightly toasted','10 dill pickle slices','Special sauce: 3 tbsp mayo, 1 tbsp ketchup, 1 tbsp yellow mustard, 1 tsp pickle brine, ½ tsp garlic powder','Shredded iceberg lettuce','Salt and black pepper','Neutral oil for pan'], steps:['Mix special sauce ingredients; refrigerate.','Heat cast-iron skillet until smoking hot.','Place 2 beef balls in pan; smash flat with a heavy spatula (110g becomes ~10cm patty).','Season immediately with salt and pepper.','Cook 2 min — a deep crust will form; do not touch.','Flip once; lay cheese on each patty immediately.','Stack double patties; steam 30 sec.','Toast buns cut-side down in same pan.','Build: sauce, lettuce, pickles, double patty, top bun.'], category:'Classic', trending:true, ytUrl:'https://www.youtube.com/watch?v=foD42-73wdI', ytTitle:'The Perfect Smash Burger – Guga Foods' },
+      { name:'BBQ Ribs', img:'https://images.unsplash.com/photo-1544025162-d76694265947?w=600&q=80', desc:'Slow-smoked pork ribs glazed with tangy-sweet BBQ sauce — the crown jewel of American BBQ. The 3-2-1 method gives consistently perfect ribs every time.', origin:'Kansas City, USA', tags:['Smoked','Pork','BBQ'], ingredients:['2 racks pork baby back ribs (about 1.5kg each)','Dry rub: 3 tbsp brown sugar, 2 tbsp paprika, 1 tbsp garlic powder, 1 tbsp onion powder, 1 tsp black pepper, 1 tsp salt, ½ tsp cayenne','4 tbsp yellow mustard (as binder)','100ml apple cider vinegar + water spray','250ml Kansas City-style BBQ sauce (or homemade)','2 tbsp apple cider vinegar (for sauce)','Wood chunks: hickory or cherry'], steps:['Remove membrane from back of ribs using a paper towel grip.','Coat all sides with yellow mustard as a binder.','Apply dry rub generously; pat into surface. Rest 1 hour.','Heat smoker to 107°C (225°F) with hickory wood.','Smoke uncovered 3 hours — this is the smoke phase.','Wrap tightly in foil with a splash of apple cider vinegar; smoke 2 more hours.','Unwrap; brush generously with BBQ sauce.','Smoke uncovered 1 final hour to set the glaze.','Rest 10 minutes before slicing between bones.'], category:'Classic', trending:false, ytUrl:'https://www.youtube.com/watch?v=tFHBpCQ_yuE', ytTitle:'Perfect 3-2-1 BBQ Ribs – Malcolm Reed' },
+      { name:'Buttermilk Pancakes', img:'https://images.unsplash.com/photo-1565299543923-37dd37887442?w=600&q=80', desc:'Thick, fluffy stacks of buttermilk pancakes drizzled with maple syrup — the quintessential American Sunday breakfast. The acid in buttermilk reacts with baking soda to create maximum fluff.', origin:'USA', tags:['Breakfast','Sweet','Vegetarian'], ingredients:['240g all-purpose flour','2 tbsp sugar','1 tsp baking powder','½ tsp baking soda','½ tsp fine salt','360ml cold buttermilk','2 large eggs','3 tbsp unsalted butter, melted (+ extra for pan)','1 tsp vanilla extract','Pure maple syrup to serve','Fresh blueberries (optional)'], steps:['Whisk all dry ingredients together in a large bowl.','In another bowl, whisk buttermilk, eggs, melted butter, and vanilla.','Pour wet into dry; stir until just combined — lumps are essential.','Let batter rest 5 minutes.','Heat a non-stick pan or griddle over medium; butter lightly.','Pour ¼ cup batter per pancake; do not spread.','Cook until bubbles form and edges look dry, about 2–3 min.','Flip once; cook 1–2 min more until golden.','Keep warm in oven at 90°C; serve in stacks with maple syrup.'], category:'Vegetarian', trending:true, ytUrl:'https://www.youtube.com/watch?v=9zCVCL4V8JQ', ytTitle:'Fluffy Buttermilk Pancakes – Binging with Babish' },
     ]
   },
 ];
@@ -1403,7 +721,9 @@ const CUISINES = [
 let favourites = JSON.parse(localStorage.getItem('woap_favs') || '[]');
 let currentDish = null;
 let previousPage = 'home';
+let activeBottomNav = 'home';
 
+// ── RENDER FUNCTIONS ──
 function renderHome(filter = 'All') {
   const grid = document.getElementById('cuisine-grid');
   grid.innerHTML = '';
@@ -1474,21 +794,33 @@ function renderFavourites() {
 
 function escapeName(n) { return n.replace(/'/g, "\\'"); }
 
+// ── NAVIGATION ──
 function showPage(page) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('page-' + page).classList.add('active');
+
+  // Desktop sidebar
   document.querySelectorAll('#sidebar nav a').forEach(a => a.classList.remove('active'));
   const link = document.querySelector(`#sidebar nav a[data-page="${page}"]`);
   if (link) link.classList.add('active');
+
+  // Bottom nav
+  setBottomNav(page);
+
   if (page === 'trending') renderTrending();
   if (page === 'favourites') renderFavourites();
   closeSidebar();
   window.scrollTo(0, 0);
 }
 
-function goHome() {
-  showPage('home');
+function setBottomNav(id) {
+  document.querySelectorAll('#bottom-nav .nav-item').forEach(el => el.classList.remove('active'));
+  const map = { home: 'nav-home', trending: 'nav-trending', favourites: 'nav-favourites' };
+  if (map[id]) document.getElementById(map[id])?.classList.add('active');
+  activeBottomNav = id;
 }
+
+function goHome() { showPage('home'); }
 
 function showCuisine(cid) {
   const c = CUISINES.find(cc => cc.id === cid);
@@ -1497,10 +829,10 @@ function showCuisine(cid) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('page-cuisine').classList.add('active');
   document.getElementById('cuisine-hero').innerHTML = `
-    <div style="background:linear-gradient(135deg,${c.c1},${c.c2});padding:32px 28px;border-radius:18px;">
-      <span style="font-size:3rem">${c.flag}</span>
-      <h2 style="font-family:'Playfair Display',serif;color:#fff;font-size:2rem;margin-top:8px">${c.label} Cuisine</h2>
-      <p style="color:rgba(255,255,255,.8);margin-top:4px">${c.tagline}</p>
+    <div style="background:linear-gradient(135deg,${c.c1},${c.c2});padding:28px 24px;border-radius:18px;">
+      <span style="font-size:2.8rem">${c.flag}</span>
+      <h2 style="font-family:'Playfair Display',serif;color:#fff;font-size:1.8rem;margin-top:6px">${c.label} Cuisine</h2>
+      <p style="color:rgba(255,255,255,.8);margin-top:4px;font-size:.88rem">${c.tagline}</p>
     </div>`;
   document.getElementById('cuisine-dish-list').innerHTML = c.dishes.map(d => `
     <div class="dish-item" onclick="openDishPage('${c.id}','${escapeName(d.name)}')" style="margin-bottom:10px">
@@ -1511,6 +843,8 @@ function showCuisine(cid) {
   document.querySelectorAll('#sidebar nav a').forEach(a => a.classList.remove('active'));
   const link = document.querySelector(`#sidebar nav a[data-cuisine="${cid}"]`);
   if (link) link.classList.add('active');
+  document.querySelectorAll('#bottom-nav .nav-item').forEach(el => el.classList.remove('active'));
+  document.getElementById('nav-cuisines')?.classList.add('active');
   closeSidebar();
   window.scrollTo(0, 0);
 }
@@ -1523,21 +857,14 @@ function openDishPage(cid, name) {
 
   document.getElementById('dish-page-img').src = d.img;
   document.getElementById('dish-page-img').alt = d.name;
-  document.getElementById('dish-back-btn').onclick = goBackFromDish;
-
   document.getElementById('dish-page-name').textContent = d.name;
   document.getElementById('dish-page-origin').textContent = '📍 ' + d.origin;
   document.getElementById('dish-page-tags').innerHTML =
     d.tags.map(t => `<span>${t}</span>`).join('') +
     (d.trending ? '<span class="hot-tag">🔥 Trending</span>' : '');
   document.getElementById('dish-page-desc').textContent = d.desc;
-
-  document.getElementById('dish-page-ingredients').innerHTML =
-    d.ingredients.map(i => `<li>${i}</li>`).join('');
-
-  document.getElementById('dish-page-steps').innerHTML =
-    d.steps.map((s, i) => `<li><span class="step-num">${i+1}</span><span>${s}</span></li>`).join('');
-
+  document.getElementById('dish-page-ingredients').innerHTML = d.ingredients.map(i => `<li>${i}</li>`).join('');
+  document.getElementById('dish-page-steps').innerHTML = d.steps.map((s, i) => `<li><span class="step-num">${i+1}</span><span>${s}</span></li>`).join('');
   document.getElementById('dish-yt-link').href = d.ytUrl;
   document.getElementById('dish-yt-title').textContent = d.ytTitle;
 
@@ -1549,12 +876,9 @@ function openDishPage(cid, name) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('page-dish').classList.add('active');
   window.scrollTo(0, 0);
-  closeSidebar();
 }
 
-function goBackFromDish() {
-  showPage('home');
-}
+function goBackFromDish() { showPage('home'); }
 
 function toggleFavFromPage() {
   if (!currentDish) return;
@@ -1575,6 +899,7 @@ function toggleFavFromPage() {
   localStorage.setItem('woap_favs', JSON.stringify(favourites));
 }
 
+// ── SEARCH ──
 let searchTimeout;
 function liveSearch(val) {
   clearTimeout(searchTimeout);
@@ -1584,6 +909,22 @@ function liveSearch(val) {
 function doSearch() {
   const val = document.getElementById('search-input').value.toLowerCase().trim();
   if (!val) return;
+  runSearch(val);
+}
+function mobileLiveSearch(val) {
+  clearTimeout(searchTimeout);
+  if (!val.trim()) return;
+  searchTimeout = setTimeout(() => {
+    closeMobileSearch();
+    runSearch(val);
+  }, 500);
+}
+function doMobileSearch() {
+  const val = document.getElementById('mobile-search-input').value.toLowerCase().trim();
+  if (!val) return;
+  runSearch(val);
+}
+function runSearch(val) {
   const results = [];
   CUISINES.forEach(c => {
     c.dishes.forEach(d => {
@@ -1601,13 +942,15 @@ function doSearch() {
   const container = document.getElementById('search-results');
   if (!results.length) {
     container.innerHTML = `<div class="empty-state"><div class="big">🔍</div><p>No dishes found for "<strong>${val}</strong>".<br>Try "pasta", "curry", or "sushi".</p></div>`;
-    return;
+  } else {
+    container.innerHTML = results.map(d => `
+      <div class="search-result-item" onclick="openDishPage('${d.cid}','${escapeName(d.name)}')">
+        <img class="sr-img" src="${d.img}" alt="${d.name}" loading="lazy" onerror="this.style.display='none'"/>
+        <div class="sr-info"><strong>${d.name}</strong><span>${d.cuisineName} · ${d.tags.join(' · ')}</span></div>
+      </div>`).join('');
   }
-  container.innerHTML = results.map(d => `
-    <div class="search-result-item" onclick="openDishPage('${d.cid}','${escapeName(d.name)}')">
-      <img class="sr-img" src="${d.img}" alt="${d.name}" loading="lazy" onerror="this.style.display='none'"/>
-      <div class="sr-info"><strong>${d.name}</strong><span>${d.cuisineName} · ${d.tags.join(' · ')}</span></div>
-    </div>`).join('');
+  document.querySelectorAll('#bottom-nav .nav-item').forEach(el => el.classList.remove('active'));
+  window.scrollTo(0, 0);
 }
 
 function filterCards(filter, btn) {
@@ -1616,6 +959,38 @@ function filterCards(filter, btn) {
   renderHome(filter);
 }
 
+// ── DRAWER ──
+function openDrawer() {
+  document.getElementById('mobile-drawer-overlay').style.display = 'block';
+  setTimeout(() => {
+    document.getElementById('mobile-drawer-overlay').classList.add('open');
+    document.getElementById('mobile-drawer').classList.add('open');
+  }, 10);
+}
+function closeDrawer() {
+  document.getElementById('mobile-drawer-overlay').classList.remove('open');
+  document.getElementById('mobile-drawer').classList.remove('open');
+  setTimeout(() => { document.getElementById('mobile-drawer-overlay').style.display = 'none'; }, 350);
+}
+function closeDrawerAndGo(cid) { closeDrawer(); setTimeout(() => showCuisine(cid), 100); }
+function closeDrawerAndPage(page) { closeDrawer(); setTimeout(() => showPage(page), 100); }
+
+// ── MOBILE SEARCH ──
+function openMobileSearch() {
+  document.getElementById('mobile-search-overlay').style.display = 'block';
+  setTimeout(() => {
+    document.getElementById('mobile-search-overlay').classList.add('open');
+    document.getElementById('mobile-search-modal').classList.add('open');
+    document.getElementById('mobile-search-input').focus();
+  }, 10);
+}
+function closeMobileSearch() {
+  document.getElementById('mobile-search-overlay').classList.remove('open');
+  document.getElementById('mobile-search-modal').classList.remove('open');
+  setTimeout(() => { document.getElementById('mobile-search-overlay').style.display = 'none'; }, 300);
+}
+
+// ── TOAST ──
 let toastTimer;
 function showToast(msg) {
   const t = document.getElementById('toast');
@@ -1625,9 +1000,10 @@ function showToast(msg) {
   toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
 }
 
-function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
-function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); }
+// ── DESKTOP SIDEBAR ──
+function closeSidebar() {}
 
+// ── INIT ──
 renderHome();
 </script>
 </body>
