@@ -23,7 +23,6 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); display: flex; min-height: 100vh; overflow-x: hidden; }
 
-  /* ── SIDEBAR ── */
   #sidebar {
     width: 240px; min-height: 100vh; background: var(--sidebar);
     display: flex; flex-direction: column; position: fixed; left: 0; top: 0; z-index: 100;
@@ -34,20 +33,14 @@
     border-bottom: 1px solid #2e1e0e;
     cursor: pointer;
     transition: background .2s;
+    display: flex; align-items: center; justify-content: center;
   }
   #sidebar .logo-area:hover { background: #2e1e0e; }
   #sidebar .logo-area .logo-svg-wrap {
-    display: flex; align-items: center; gap: 10px;
+    display: flex; align-items: center; justify-content: center;
   }
   #sidebar .logo-area .logo-svg-wrap svg {
     width: 48px; height: 48px; flex-shrink: 0;
-  }
-  #sidebar .logo-area h2 {
-    font-family: 'Playfair Display', serif; color: var(--accent2);
-    font-size: 1.1rem; line-height: 1.2;
-  }
-  #sidebar .logo-area .logo-sub {
-    font-size: .65rem; color: #8a7060; margin-top: 3px; letter-spacing: .05em;
   }
   #sidebar nav { flex: 1; padding: 18px 0; overflow-y: auto; }
   #sidebar nav .section-label {
@@ -70,10 +63,8 @@
     font-size: .75rem; color: #5a4030;
   }
 
-  /* ── MAIN ── */
   #main { margin-left: 240px; flex: 1; min-height: 100vh; }
 
-  /* ── HEADER ── */
   #header {
     background: linear-gradient(135deg, #e8490f 0%, #f5a623 60%, #ffe08a 100%);
     padding: 36px 40px 28px;
@@ -95,13 +86,29 @@
     display: flex; align-items: center; gap: 14px;
   }
   #header h1 .header-logo-svg { width: 56px; height: 56px; flex-shrink: 0; }
-  #header p.tagline { color: rgba(255,255,255,.85); font-size: .95rem; margin-top: 4px; pointer-events: none; }
-  #header .header-click-hint {
-    font-size: .75rem; color: rgba(255,255,255,.5); margin-top: 2px;
+
+  /* ── Scrolling ticker tagline ── */
+  .tagline-ticker-wrap {
+    overflow: hidden;
+    width: 100%;
+    margin-top: 6px;
     pointer-events: none;
   }
+  .tagline-ticker {
+    display: inline-flex;
+    white-space: nowrap;
+    animation: ticker-scroll 20s linear infinite;
+  }
+  .tagline-ticker span {
+    color: rgba(255,255,255,.85);
+    font-size: .95rem;
+    padding-right: 100px;
+  }
+  @keyframes ticker-scroll {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
 
-  /* ── SEARCH ── */
   #search-wrap {
     margin-top: 20px; display: flex; align-items: center; gap: 10px;
     max-width: 560px;
@@ -122,21 +129,17 @@
   }
   #search-wrap button:hover { background: #2e1e0e; transform: scale(1.04); }
 
-  /* ── CONTENT AREA ── */
   #content { padding: 32px 40px 60px; }
 
-  /* ── PAGE SECTIONS ── */
   .page { display: none; }
   .page.active { display: block; }
 
-  /* ── SECTION TITLE ── */
   .sec-title {
     font-family: 'Playfair Display', serif; font-size: 1.7rem; font-weight: 700;
     color: var(--text); margin-bottom: 6px;
   }
   .sec-sub { color: var(--muted); font-size: .9rem; margin-bottom: 28px; }
 
-  /* ── FILTER PILLS ── */
   .filter-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 30px; }
   .pill {
     padding: 7px 18px; border-radius: 50px; border: 2px solid var(--border);
@@ -145,7 +148,6 @@
   }
   .pill:hover, .pill.active { border-color: var(--accent1); background: var(--accent1); color: #fff; }
 
-  /* ── CUISINE CARDS ── */
   .cuisine-grid {
     display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: 28px;
@@ -174,7 +176,10 @@
     transition: background .18s, transform .18s;
   }
   .dish-item:hover { background: #ffe8d4; transform: translateX(4px); }
-  .dish-item .emoji { font-size: 1.5rem; width: 36px; text-align: center; }
+  .dish-item .dish-thumb {
+    width: 46px; height: 46px; border-radius: 10px; object-fit: cover; flex-shrink: 0;
+    background: #e0d4c8;
+  }
   .dish-item .info { flex: 1; }
   .dish-item .info strong { font-size: .9rem; color: var(--text); display: block; }
   .dish-item .info span { font-size: .78rem; color: var(--muted); }
@@ -190,15 +195,19 @@
   }
   .cuisine-card .see-all:hover { background: #fff5ee; }
 
-  /* ── DISH PAGE ── */
   #page-dish { animation: fadeInUp .35s ease; }
   @keyframes fadeInUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
   .dish-page-hero {
     border-radius: 24px; overflow: hidden; margin-bottom: 32px;
-    position: relative; height: 260px;
-    display: flex; align-items: center; justify-content: center;
+    position: relative; height: 320px;
   }
-  .dish-page-hero .hero-emoji { font-size: 7rem; z-index: 2; position: relative; filter: drop-shadow(0 8px 24px rgba(0,0,0,.25)); }
+  .dish-page-hero img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+  }
+  .dish-page-hero .hero-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.45) 100%);
+  }
   .dish-page-hero .back-btn {
     position: absolute; top: 20px; left: 20px; z-index: 3;
     background: rgba(255,255,255,.22); border: none; border-radius: 50px;
@@ -288,7 +297,6 @@
   .btn-fav { background: #ffeef0; color: #e74c3c; }
   .btn-secondary { background: #f2ebe3; color: var(--text); }
 
-  /* ── FAVOURITES ── */
   .fav-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); gap: 18px; }
   .fav-card {
     background: #fff; border-radius: 16px; overflow: hidden;
@@ -297,8 +305,10 @@
   }
   .fav-card:hover { transform: translateY(-4px); }
   .fav-card .fav-hero {
-    height: 100px; display: flex; align-items: center; justify-content: center;
-    font-size: 3rem;
+    height: 120px; overflow: hidden;
+  }
+  .fav-card .fav-hero img {
+    width: 100%; height: 100%; object-fit: cover;
   }
   .fav-card .fav-info { padding: 14px; }
   .fav-card .fav-info strong { font-size: .9rem; display: block; margin-bottom: 2px; }
@@ -307,7 +317,6 @@
   .empty-state .big { font-size: 3rem; margin-bottom: 12px; }
   .empty-state p { font-size: .95rem; }
 
-  /* ── SEARCH RESULTS ── */
   .search-result-item {
     display: flex; align-items: center; gap: 16px;
     padding: 16px 18px; background: #fff; border-radius: 14px;
@@ -315,11 +324,13 @@
     transition: transform .18s, box-shadow .18s;
   }
   .search-result-item:hover { transform: translateX(4px); box-shadow: 0 4px 20px rgba(0,0,0,.1); }
-  .search-result-item .sr-emoji { font-size: 2rem; width: 48px; text-align: center; }
+  .search-result-item .sr-img {
+    width: 56px; height: 56px; border-radius: 10px; object-fit: cover; flex-shrink: 0;
+    background: #e0d4c8;
+  }
   .search-result-item .sr-info strong { font-size: .95rem; display: block; }
   .search-result-item .sr-info span { font-size: .8rem; color: var(--muted); }
 
-  /* ── TRENDING ── */
   .trending-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px,1fr)); gap: 16px; }
   .trend-card {
     background: #fff; border-radius: 16px; overflow: hidden; text-align: center;
@@ -327,12 +338,12 @@
     transition: transform .2s;
   }
   .trend-card:hover { transform: translateY(-4px); }
-  .trend-card .t-hero { height: 80px; display: flex; align-items: center; justify-content: center; font-size: 2.6rem; }
+  .trend-card .t-hero { height: 110px; overflow: hidden; }
+  .trend-card .t-hero img { width: 100%; height: 100%; object-fit: cover; }
   .trend-card .t-info { padding: 10px 12px 14px; }
   .trend-card .t-info strong { font-size: .85rem; display: block; margin-bottom: 2px; }
   .trend-card .t-info span { font-size: .74rem; color: var(--muted); }
 
-  /* ── TOAST ── */
   #toast {
     position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(80px);
     background: var(--sidebar); color: #fff; padding: 12px 28px;
@@ -342,12 +353,10 @@
   }
   #toast.show { transform: translateX(-50%) translateY(0); }
 
-  /* ── SCROLLBAR ── */
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: #ddd; border-radius: 6px; }
 
-  /* ── RESPONSIVE ── */
   @media (max-width: 768px) {
     #sidebar { transform: translateX(-100%); }
     #sidebar.open { transform: translateX(0); }
@@ -371,46 +380,33 @@
 
 <button id="hamburger" onclick="toggleSidebar()">☰</button>
 
-<!-- SIDEBAR -->
 <aside id="sidebar">
   <div class="logo-area" onclick="goHome()" title="Go to Home">
     <div class="logo-svg-wrap">
-      <!-- Earth on a plate with spoon & fork SVG logo -->
       <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-        <!-- Plate -->
         <ellipse cx="32" cy="48" rx="26" ry="7" fill="#c8a96e" opacity=".5"/>
         <ellipse cx="32" cy="46" rx="24" ry="6" fill="#e8d5b0"/>
         <ellipse cx="32" cy="44" rx="20" ry="5" fill="#f5ead0"/>
-        <!-- Earth globe on plate -->
         <circle cx="32" cy="28" r="16" fill="#1a6eb0"/>
-        <!-- Continents -->
         <ellipse cx="27" cy="22" rx="7" ry="5" fill="#3aab5e" transform="rotate(-15 27 22)"/>
         <ellipse cx="37" cy="25" rx="5" ry="7" fill="#3aab5e" transform="rotate(10 37 25)"/>
         <ellipse cx="30" cy="34" rx="4" ry="3" fill="#3aab5e" transform="rotate(-5 30 34)"/>
         <ellipse cx="39" cy="20" rx="3" ry="2" fill="#3aab5e"/>
-        <!-- Globe shine -->
         <circle cx="25" cy="20" r="4" fill="rgba(255,255,255,.18)"/>
-        <!-- Latitude lines -->
         <ellipse cx="32" cy="28" rx="16" ry="6" fill="none" stroke="rgba(255,255,255,.15)" stroke-width=".8"/>
         <line x1="16" y1="28" x2="48" y2="28" stroke="rgba(255,255,255,.15)" stroke-width=".8"/>
-        <!-- Fork (left) -->
         <g transform="translate(8, 10)">
           <rect x="3.5" y="0" width="1.2" height="22" rx=".6" fill="#c9a96e"/>
           <rect x="1" y="0" width="1" height="9" rx=".5" fill="#c9a96e"/>
           <rect x="6" y="0" width="1" height="9" rx=".5" fill="#c9a96e"/>
           <rect x="3.5" y="6" width="1.2" height="4" rx=".5" fill="#c9a96e"/>
         </g>
-        <!-- Spoon (right) -->
         <g transform="translate(48, 10)">
           <rect x="2.5" y="10" width="1.2" height="14" rx=".6" fill="#c9a96e"/>
           <ellipse cx="3.1" cy="7" rx="3" ry="4" fill="#c9a96e"/>
           <ellipse cx="3.1" cy="7" rx="2" ry="2.8" fill="#e8d5b0" opacity=".6"/>
         </g>
       </svg>
-      <div>
-        <h2>World on<br>a Plate</h2>
-        <div class="logo-sub">Click to go home</div>
-      </div>
     </div>
   </div>
   <nav>
@@ -433,12 +429,10 @@
   <div class="sidebar-footer">© 2025 World on a Plate</div>
 </aside>
 
-<!-- MAIN -->
 <div id="main">
-  <!-- HEADER (clicking goes home) -->
+
   <div id="header" onclick="goHome()" title="Go to Home">
     <h1>
-      <!-- Inline SVG logo in header -->
       <svg class="header-logo-svg" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
         <ellipse cx="32" cy="48" rx="26" ry="7" fill="rgba(255,255,255,.2)" opacity=".5"/>
         <ellipse cx="32" cy="46" rx="24" ry="6" fill="rgba(255,255,255,.3)"/>
@@ -461,21 +455,23 @@
       </svg>
       World on a Plate
     </h1>
-    <p class="tagline">Discover iconic dishes from every corner of the globe</p>
-    <div class="header-click-hint">↑ Click title to return home anytime</div>
+    <!-- Scrolling ticker — replaces the static tagline paragraph -->
+    <div class="tagline-ticker-wrap" onclick="event.stopPropagation()">
+      <div class="tagline-ticker">
+        <span>Discover iconic dishes from every corner of the globe</span>
+        <span>Discover iconic dishes from every corner of the globe</span>
+      </div>
+    </div>
     <div id="search-wrap" onclick="event.stopPropagation()">
       <input type="text" id="search-input" placeholder="Search dishes, cuisines, ingredients…" oninput="liveSearch(this.value)" onkeydown="if(event.key==='Enter')doSearch()"/>
       <button onclick="doSearch()">Search</button>
     </div>
   </div>
 
-  <!-- CONTENT -->
   <div id="content">
 
-    <!-- ░░ HOME PAGE ░░ -->
     <div id="page-home" class="page active">
       <div class="sec-title">Explore World Cuisines</div>
-      <div class="sec-sub">Click on any dish to open its full details page</div>
       <div class="filter-row" id="filter-row">
         <button class="pill active" onclick="filterCards('All', this)">All</button>
         <button class="pill" onclick="filterCards('Asian', this)">Asian</button>
@@ -487,38 +483,34 @@
       <div class="cuisine-grid" id="cuisine-grid"></div>
     </div>
 
-    <!-- ░░ TRENDING PAGE ░░ -->
     <div id="page-trending" class="page">
       <div class="sec-title">🔥 Trending Right Now</div>
       <div class="sec-sub">The most searched dishes worldwide this week</div>
       <div class="trending-grid" id="trending-grid"></div>
     </div>
 
-    <!-- ░░ FAVOURITES PAGE ░░ -->
     <div id="page-favourites" class="page">
       <div class="sec-title">❤️ Your Favourites</div>
       <div class="sec-sub">Dishes you've saved</div>
       <div id="fav-container"></div>
     </div>
 
-    <!-- ░░ SEARCH PAGE ░░ -->
     <div id="page-search" class="page">
       <div class="sec-title" id="search-title">Search Results</div>
       <div class="sec-sub" id="search-sub"></div>
       <div id="search-results"></div>
     </div>
 
-    <!-- ░░ SINGLE CUISINE PAGE ░░ -->
     <div id="page-cuisine" class="page">
       <div id="cuisine-hero" style="border-radius:18px;overflow:hidden;margin-bottom:28px;"></div>
       <div class="dish-list" id="cuisine-dish-list"></div>
     </div>
 
-    <!-- ░░ DISH DETAIL PAGE ░░ -->
     <div id="page-dish" class="page">
       <div class="dish-page-hero" id="dish-page-hero">
+        <img id="dish-page-img" src="" alt="" style="width:100%;height:100%;object-fit:cover;display:block;"/>
+        <div class="hero-overlay"></div>
         <button class="back-btn" id="dish-back-btn" onclick="goBackFromDish()">← Back</button>
-        <span class="hero-emoji" id="dish-page-emoji"></span>
       </div>
       <div class="dish-page-body">
         <h2 id="dish-page-name"></h2>
@@ -548,14 +540,12 @@
           </a>
         </div>
         <div class="dish-action-row">
-          <button class="btn-primary" onclick="showToast('Recipe added to your collection! 📋')">Save Recipe</button>
           <button class="btn-fav" id="dish-fav-btn" onclick="toggleFavFromPage()">♥ Add to Favourites</button>
           <button class="btn-secondary" onclick="showToast('Share link copied! 🔗')">Share</button>
         </div>
       </div>
     </div>
 
-    <!-- ░░ ABOUT PAGE ░░ -->
     <div id="page-about" class="page">
       <div class="sec-title">About World on a Plate</div>
       <div class="sec-sub">Our story</div>
@@ -569,18 +559,18 @@
   </div>
 </div>
 
-<!-- TOAST -->
 <div id="toast"></div>
 
 <script>
-// ─── DATA ────────────────────────────────────────────────────────────────────
+
 const CUISINES = [
   {
     id: 'Italian', flag: '🇮🇹', label: 'Italian', region: 'European',
     tagline: 'Pasta, Pizza & Pure Passion', c1: '#009246', c2: '#ce2b37',
     dishes: [
       {
-        emoji:'🍕', name:'Margherita Pizza',
+        name:'Margherita Pizza',
+        img:'https://images.unsplash.com/photo-1604068549290-dea0e4a305ca?w=600&q=80',
         desc:'The iconic Neapolitan pizza with San Marzano tomatoes, fresh mozzarella, and basil — simple perfection born in Naples in 1889, named in honour of Queen Margherita of Savoy.',
         origin:'Naples, Italy', tags:['Vegetarian','Baked','Classic'],
         ingredients:[
@@ -614,7 +604,8 @@ const CUISINES = [
         ytTitle:'Authentic Neapolitan Margherita Pizza – Joshua Weissman'
       },
       {
-        emoji:'🍝', name:'Spaghetti Carbonara',
+        name:'Spaghetti Carbonara',
+        img:'https://images.unsplash.com/photo-1612874742237-6526221588e3?w=600&q=80',
         desc:'Creamy egg-and-guanciale sauce clinging to al-dente spaghetti — Rome\'s beloved weeknight classic. The creaminess comes entirely from eggs and cheese — never cream.',
         origin:'Rome, Italy', tags:['Pasta','Creamy','Quick'],
         ingredients:[
@@ -643,7 +634,8 @@ const CUISINES = [
         ytTitle:'Spaghetti Carbonara – Italia Squisita (Authentic Roman)'
       },
       {
-        emoji:'🫕', name:'Ribollita',
+        name:'Ribollita',
+        img:'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=600&q=80',
         desc:'Thick Tuscan bread-and-vegetable stew that gets better the next day — literally meaning "reboiled", a testament to Florentine peasant genius.',
         origin:'Tuscany, Italy', tags:['Vegetarian','Stew','Hearty'],
         ingredients:[
@@ -682,7 +674,8 @@ const CUISINES = [
     tagline: 'Spices, Warmth & Bold Flavours', c1: '#ff9933', c2: '#138808',
     dishes: [
       {
-        emoji:'🍛', name:'Butter Chicken',
+        name:'Butter Chicken',
+        img:'https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?w=600&q=80',
         desc:'Tender chicken in a rich, velvety tomato-cream sauce — the dish that conquered the world. Created by accident in Delhi in the 1950s at Moti Mahal restaurant.',
         origin:'Delhi, India', tags:['Creamy','Spiced','Iconic'],
         ingredients:[
@@ -718,7 +711,8 @@ const CUISINES = [
         ytTitle:'Restaurant-Style Butter Chicken – Ranveer Brar'
       },
       {
-        emoji:'🫓', name:'Masala Dosa',
+        name:'Masala Dosa',
+        img:'https://images.unsplash.com/photo-1668236543090-82eba5ee5976?w=600&q=80',
         desc:'Crispy fermented rice crepe wrapped around spiced potato filling — South India\'s breakfast king, beloved from Karnataka to Tamil Nadu.',
         origin:'Karnataka, India', tags:['Vegetarian','Crispy','Breakfast'],
         ingredients:[
@@ -749,10 +743,11 @@ const CUISINES = [
         ],
         category:'Vegetarian', trending:true,
         ytUrl:'https://www.youtube.com/watch?v=mDqkxZ3UVzc',
-         ytTitle:'Perfect Crispy Masala Dosa – Hebbar\'s Kitchen'
+        ytTitle:'Perfect Crispy Masala Dosa – Hebbar\'s Kitchen'
       },
       {
-        emoji:'🍲', name:'Dal Makhani',
+        name:'Dal Makhani',
+        img:'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=600&q=80',
         desc:'Black lentils slow-cooked overnight with butter and cream — the ultimate comfort dal from Punjab, traditionally simmered on a wood-fire for 24 hours.',
         origin:'Punjab, India', tags:['Vegetarian','Slow-cooked','Rich'],
         ingredients:[
@@ -793,7 +788,8 @@ const CUISINES = [
     tagline: 'Precision, Freshness & Umami', c1: '#bc002d', c2: '#e06c75',
     dishes: [
       {
-        emoji:'🍣', name:'Salmon Nigiri',
+        name:'Salmon Nigiri',
+        img:'https://images.unsplash.com/photo-1559410545-0bdcd187e0a6?w=600&q=80',
         desc:'Hand-pressed sushi rice topped with silky fresh salmon — a study in simplicity and perfection. The quality of the fish and rice seasoning are everything.',
         origin:'Tokyo, Japan', tags:['Seafood','Fresh','Classic'],
         ingredients:[
@@ -822,7 +818,8 @@ const CUISINES = [
         ytTitle:'How to Make Nigiri Sushi at Home – Peaceful Cuisine'
       },
       {
-        emoji:'🍜', name:'Tonkotsu Ramen',
+        name:'Tonkotsu Ramen',
+        img:'https://images.unsplash.com/photo-1569050467447-ce54b3bbc37d?w=600&q=80',
         desc:'Rich, creamy pork bone broth with springy noodles, chashu pork, and a soft-boiled egg. The broth alone requires 12+ hours of constant boiling to become milky and rich.',
         origin:'Fukuoka, Japan', tags:['Noodles','Rich','Comfort'],
         ingredients:[
@@ -854,7 +851,8 @@ const CUISINES = [
         ytTitle:'Tonkotsu Ramen From Scratch – Joshua Weissman'
       },
       {
-        emoji:'🥢', name:'Tempura',
+        name:'Tempura',
+        img:'https://images.unsplash.com/photo-1583623025817-d180a2221d0a?w=600&q=80',
         desc:'Impossibly light and crispy battered seafood and vegetables. The secret: ice-cold water, minimal mixing, and very hot oil.',
         origin:'Japan', tags:['Seafood','Fried','Light'],
         ingredients:[
@@ -892,7 +890,8 @@ const CUISINES = [
     tagline: 'Bold, Bright & Festive', c1: '#006847', c2: '#ce1126',
     dishes: [
       {
-        emoji:'🌮', name:'Tacos al Pastor',
+        name:'Tacos al Pastor',
+        img:'https://images.unsplash.com/photo-1613514785940-daed07799d9b?w=600&q=80',
         desc:'Marinated pork cooked on a vertical spit with pineapple, served in soft corn tortillas. Brought to Mexico by Lebanese immigrants in the 1930s — a glorious fusion.',
         origin:'Mexico City, Mexico', tags:['Street Food','Pork','Spiced'],
         ingredients:[
@@ -924,7 +923,8 @@ const CUISINES = [
         ytTitle:'Tacos al Pastor – Authentic Recipe at Home'
       },
       {
-        emoji:'🥑', name:'Guacamole',
+        name:'Guacamole',
+        img:'https://images.unsplash.com/photo-1506280754576-f6fa8a873550?w=600&q=80',
         desc:'Chunky, bright avocado dip with lime, cilantro, and jalapeño — Mexico\'s most famous condiment. Always made fresh; never from a jar.',
         origin:'Mexico', tags:['Vegetarian','Dip','Fresh'],
         ingredients:[
@@ -952,7 +952,8 @@ const CUISINES = [
         ytTitle:'Best Guacamole Ever – Rick Bayless'
       },
       {
-        emoji:'🌯', name:'Chicken Burrito',
+        name:'Chicken Burrito',
+        img:'https://images.unsplash.com/photo-1626700051175-6818013e1d4f?w=600&q=80',
         desc:'Flour tortilla stuffed with seasoned chicken, rice, beans, salsa, and cheese. A Baja California invention that became a global icon.',
         origin:'Baja California, Mexico', tags:['Filling','Lunch','Crowd-pleaser'],
         ingredients:[
@@ -989,7 +990,8 @@ const CUISINES = [
     tagline: 'Ancient Techniques, Bold Flavours', c1: '#de2910', c2: '#ffde00',
     dishes: [
       {
-        emoji:'🥟', name:'Xiao Long Bao',
+        name:'Xiao Long Bao',
+        img:'https://images.unsplash.com/photo-1563245372-f21724e3856d?w=600&q=80',
         desc:'Delicate soup dumplings filled with pork and hot broth — Shanghai\'s most beloved bite. The magic lies in the aspic that melts into soup inside the dumpling as it steams.',
         origin:'Shanghai, China', tags:['Dumplings','Steamed','Iconic'],
         ingredients:[
@@ -1022,7 +1024,8 @@ const CUISINES = [
         ytTitle:'Xiao Long Bao (Soup Dumplings) from Scratch – Made With Lau'
       },
       {
-        emoji:'🍜', name:'Kung Pao Chicken',
+        name:'Kung Pao Chicken',
+        img:'https://images.unsplash.com/photo-1525755662778-989d0524087e?w=600&q=80',
         desc:'Stir-fried chicken with peanuts, dried chillies, and Sichuan peppercorns in a tangy-sweet sauce. A Sichuan classic with a numbing, tingling heat like no other dish.',
         origin:'Sichuan, China', tags:['Spicy','Stir-fry','Nutty'],
         ingredients:[
@@ -1053,7 +1056,8 @@ const CUISINES = [
         ytTitle:'Kung Pao Chicken – Woks of Life Authentic Recipe'
       },
       {
-        emoji:'🦐', name:'Dim Sum Har Gow',
+        name:'Dim Sum Har Gow',
+        img:'https://images.unsplash.com/photo-1496116218417-1a781b1c416c?w=600&q=80',
         desc:'Translucent shrimp dumplings with a paper-thin skin — the benchmark of a great dim sum house. A skilled chef\'s har gow should have exactly 7 pleats.',
         origin:'Guangdong, China', tags:['Seafood','Steamed','Delicate'],
         ingredients:[
@@ -1092,7 +1096,8 @@ const CUISINES = [
     tagline: 'Elegance on Every Plate', c1: '#002395', c2: '#ed2939',
     dishes: [
       {
-        emoji:'🥐', name:'Croissant',
+        name:'Croissant',
+        img:'https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=600&q=80',
         desc:'Buttery, flaky, laminated pastry — the Parisian morning ritual. True croissants require three days and 27 layers of butter to achieve their signature honeycombed interior.',
         origin:'Paris, France', tags:['Pastry','Breakfast','Buttery'],
         ingredients:[
@@ -1120,7 +1125,8 @@ const CUISINES = [
         ytTitle:'Homemade Croissants – Claire Saffitz'
       },
       {
-        emoji:'🧅', name:'French Onion Soup',
+        name:'French Onion Soup',
+        img:'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=600&q=80',
         desc:'Deeply caramelised onions in rich beef broth under a golden Gruyère crouton — Lyon\'s gift to the world. The patience required to properly caramelise the onions is the whole secret.',
         origin:'Lyon, France', tags:['Soup','Warming','Classic'],
         ingredients:[
@@ -1153,7 +1159,8 @@ const CUISINES = [
         ytTitle:'French Onion Soup – Jacques Pépin'
       },
       {
-        emoji:'🐓', name:'Coq au Vin',
+        name:'Coq au Vin',
+        img:'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&q=80',
         desc:'Chicken braised in burgundy wine with mushrooms, pearl onions, and lardons. Julia Child introduced this rustic Burgundian classic to American home cooks in the 1960s.',
         origin:'Burgundy, France', tags:['Braised','Wine','Rustic'],
         ingredients:[
@@ -1193,7 +1200,8 @@ const CUISINES = [
     tagline: 'Sweet, Sour, Salty, Spicy — All at Once', c1: '#a51931', c2: '#f5c518',
     dishes: [
       {
-        emoji:'🍜', name:'Pad Thai',
+        name:'Pad Thai',
+        img:'https://images.unsplash.com/photo-1559314809-0d155014e29e?w=600&q=80',
         desc:'Stir-fried rice noodles with tamarind, egg, bean sprouts, and peanuts — Thailand\'s most famous export, developed as a national dish in the 1930s to promote rice noodle consumption.',
         origin:'Bangkok, Thailand', tags:['Noodles','Street Food','Tangy'],
         ingredients:[
@@ -1227,7 +1235,8 @@ const CUISINES = [
         ytTitle:'Authentic Pad Thai – Pailin\'s Kitchen'
       },
       {
-        emoji:'🍲', name:'Tom Kha Gai',
+        name:'Tom Kha Gai',
+        img:'https://images.unsplash.com/photo-1548943487-a2e4e43b4853?w=600&q=80',
         desc:'Coconut chicken soup fragrant with galangal, lemongrass, and lime leaves — simultaneously a broth, a curry, and pure aromatic bliss.',
         origin:'Thailand', tags:['Soup','Coconut','Aromatic'],
         ingredients:[
@@ -1258,7 +1267,8 @@ const CUISINES = [
         ytTitle:'Tom Kha Gai – Hot Thai Kitchen'
       },
       {
-        emoji:'🦐', name:'Thai Green Curry',
+        name:'Thai Green Curry',
+        img:'https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?w=600&q=80',
         desc:'Fragrant green curry paste cooked with coconut milk — the most aromatic of Thai curries, with its heat coming from fresh green chillies rather than dried.',
         origin:'Central Thailand', tags:['Spicy','Coconut','Aromatic'],
         ingredients:[
@@ -1295,7 +1305,8 @@ const CUISINES = [
     tagline: 'Big, Bold & Iconic', c1: '#3c3b6e', c2: '#b22234',
     dishes: [
       {
-        emoji:'🍔', name:'Classic Smash Burger',
+        name:'Classic Smash Burger',
+        img:'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&q=80',
         desc:'Two smashed patties with caramelised crust, American cheese, pickles, and special sauce on a brioche bun. Smashing creates maximum Maillard surface area — that\'s the science of flavour.',
         origin:'USA', tags:['Beef','Grilled','Iconic'],
         ingredients:[
@@ -1324,7 +1335,8 @@ const CUISINES = [
         ytTitle:'The Perfect Smash Burger – Guga Foods'
       },
       {
-        emoji:'🌽', name:'BBQ Ribs',
+        name:'BBQ Ribs',
+        img:'https://images.unsplash.com/photo-1544025162-d76694265947?w=600&q=80',
         desc:'Slow-smoked pork ribs glazed with tangy-sweet BBQ sauce — the crown jewel of American BBQ. The 3-2-1 method gives consistently perfect ribs every time.',
         origin:'Kansas City, USA', tags:['Smoked','Pork','BBQ'],
         ingredients:[
@@ -1352,7 +1364,8 @@ const CUISINES = [
         ytTitle:'Perfect 3-2-1 BBQ Ribs – Malcolm Reed'
       },
       {
-        emoji:'🥞', name:'Buttermilk Pancakes',
+        name:'Buttermilk Pancakes',
+        img:'https://images.unsplash.com/photo-1565299543923-37dd37887442?w=600&q=80',
         desc:'Thick, fluffy stacks of buttermilk pancakes drizzled with maple syrup — the quintessential American Sunday breakfast. The acid in buttermilk reacts with baking soda to create maximum fluff.',
         origin:'USA', tags:['Breakfast','Sweet','Vegetarian'],
         ingredients:[
@@ -1387,12 +1400,10 @@ const CUISINES = [
   },
 ];
 
-// ─── STATE ────────────────────────────────────────────────────────────────────
 let favourites = JSON.parse(localStorage.getItem('woap_favs') || '[]');
 let currentDish = null;
 let previousPage = 'home';
 
-// ─── RENDER HOME ────────────────────────────────────────────────────────────
 function renderHome(filter = 'All') {
   const grid = document.getElementById('cuisine-grid');
   grid.innerHTML = '';
@@ -1412,7 +1423,7 @@ function renderHome(filter = 'All') {
         <div class="dish-list">
           ${dishes.slice(0,3).map(d => `
             <div class="dish-item" onclick="openDishPage('${c.id}','${escapeName(d.name)}')">
-              <span class="emoji">${d.emoji}</span>
+              <img class="dish-thumb" src="${d.img}" alt="${d.name}" loading="lazy" onerror="this.style.display='none'"/>
               <div class="info">
                 <strong>${d.name}</strong>
                 <span>${d.tags.join(' · ')}</span>
@@ -1435,7 +1446,7 @@ function renderTrending() {
     const el = document.createElement('div');
     el.className = 'trend-card';
     el.innerHTML = `
-      <div class="t-hero" style="background:linear-gradient(135deg,${d.c1},${d.c2})">${d.emoji}</div>
+      <div class="t-hero"><img src="${d.img}" alt="${d.name}" loading="lazy" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.style.background='linear-gradient(135deg,${d.c1},${d.c2})'"/></div>
       <div class="t-info"><strong>${d.name}</strong><span>${d.tags[0]}</span></div>
     `;
     el.onclick = () => openDishPage(d.cid, d.name);
@@ -1456,12 +1467,11 @@ function renderFavourites() {
   });
   container.innerHTML = `<div class="fav-grid">${items.map(d => `
     <div class="fav-card" onclick="openDishPage('${d.cid}','${escapeName(d.name)}')">
-      <div class="fav-hero" style="background:linear-gradient(135deg,${d.c1},${d.c2})">${d.emoji}</div>
+      <div class="fav-hero"><img src="${d.img}" alt="${d.name}" loading="lazy" onerror="this.parentElement.style.background='linear-gradient(135deg,${d.c1},${d.c2})'"/></div>
       <div class="fav-info"><strong>${d.name}</strong><span>${d.tags[0]}</span></div>
     </div>`).join('')}</div>`;
 }
 
-// ─── NAVIGATION ───────────────────────────────────────────────────────────────
 function escapeName(n) { return n.replace(/'/g, "\\'"); }
 
 function showPage(page) {
@@ -1494,7 +1504,7 @@ function showCuisine(cid) {
     </div>`;
   document.getElementById('cuisine-dish-list').innerHTML = c.dishes.map(d => `
     <div class="dish-item" onclick="openDishPage('${c.id}','${escapeName(d.name)}')" style="margin-bottom:10px">
-      <span class="emoji">${d.emoji}</span>
+      <img class="dish-thumb" src="${d.img}" alt="${d.name}" loading="lazy" onerror="this.style.display='none'"/>
       <div class="info"><strong>${d.name}</strong><span>${d.tags.join(' · ')}</span></div>
       ${d.trending ? '<span class="badge">🔥 Hot</span>' : ''}
     </div>`).join('');
@@ -1505,21 +1515,16 @@ function showCuisine(cid) {
   window.scrollTo(0, 0);
 }
 
-// ─── DISH PAGE ───────────────────────────────────────────────────────────────
 function openDishPage(cid, name) {
   const c = CUISINES.find(cc => cc.id === cid);
   const d = c.dishes.find(dd => dd.name === name);
   if (!d) return;
   currentDish = { ...d, cid };
 
-  // Hero
-  document.getElementById('dish-page-hero').style.background = `linear-gradient(135deg,${c.c1},${c.c2})`;
-  document.getElementById('dish-page-emoji').textContent = d.emoji;
-
-  // Back button label
+  document.getElementById('dish-page-img').src = d.img;
+  document.getElementById('dish-page-img').alt = d.name;
   document.getElementById('dish-back-btn').onclick = goBackFromDish;
 
-  // Info
   document.getElementById('dish-page-name').textContent = d.name;
   document.getElementById('dish-page-origin').textContent = '📍 ' + d.origin;
   document.getElementById('dish-page-tags').innerHTML =
@@ -1527,25 +1532,20 @@ function openDishPage(cid, name) {
     (d.trending ? '<span class="hot-tag">🔥 Trending</span>' : '');
   document.getElementById('dish-page-desc').textContent = d.desc;
 
-  // Ingredients
   document.getElementById('dish-page-ingredients').innerHTML =
     d.ingredients.map(i => `<li>${i}</li>`).join('');
 
-  // Steps
   document.getElementById('dish-page-steps').innerHTML =
     d.steps.map((s, i) => `<li><span class="step-num">${i+1}</span><span>${s}</span></li>`).join('');
 
-  // YouTube
   document.getElementById('dish-yt-link').href = d.ytUrl;
   document.getElementById('dish-yt-title').textContent = d.ytTitle;
 
-  // Fav button
   const isFav = favourites.some(f => f.name === d.name && f.cid === cid);
   const favBtn = document.getElementById('dish-fav-btn');
   favBtn.textContent = isFav ? '♥ In Favourites' : '♥ Add to Favourites';
   favBtn.style.background = isFav ? '#ffcdd2' : '#ffeef0';
 
-  // Show page
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('page-dish').classList.add('active');
   window.scrollTo(0, 0);
@@ -1553,9 +1553,6 @@ function openDishPage(cid, name) {
 }
 
 function goBackFromDish() {
-  // Go back to the previous cuisine or home
-  history.back ? null : null;
-  // Simple approach: go back to home
   showPage('home');
 }
 
@@ -1578,7 +1575,6 @@ function toggleFavFromPage() {
   localStorage.setItem('woap_favs', JSON.stringify(favourites));
 }
 
-// ─── SEARCH ───────────────────────────────────────────────────────────────────
 let searchTimeout;
 function liveSearch(val) {
   clearTimeout(searchTimeout);
@@ -1609,19 +1605,17 @@ function doSearch() {
   }
   container.innerHTML = results.map(d => `
     <div class="search-result-item" onclick="openDishPage('${d.cid}','${escapeName(d.name)}')">
-      <span class="sr-emoji">${d.emoji}</span>
+      <img class="sr-img" src="${d.img}" alt="${d.name}" loading="lazy" onerror="this.style.display='none'"/>
       <div class="sr-info"><strong>${d.name}</strong><span>${d.cuisineName} · ${d.tags.join(' · ')}</span></div>
     </div>`).join('');
 }
 
-// ─── FILTER ───────────────────────────────────────────────────────────────────
 function filterCards(filter, btn) {
   document.querySelectorAll('.filter-row .pill').forEach(p => p.classList.remove('active'));
   btn.classList.add('active');
   renderHome(filter);
 }
 
-// ─── TOAST ────────────────────────────────────────────────────────────────────
 let toastTimer;
 function showToast(msg) {
   const t = document.getElementById('toast');
@@ -1631,11 +1625,9 @@ function showToast(msg) {
   toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
 }
 
-// ─── SIDEBAR ──────────────────────────────────────────────────────────────────
 function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
 function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); }
 
-// ─── INIT ────────────────────────────────────────────────────────────────────
 renderHome();
 </script>
 </body>
